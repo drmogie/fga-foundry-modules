@@ -34,7 +34,7 @@ Open **Game Settings > Configure Settings > FGA Ammo Tracker**.
 **Manifest URL (recommended):**
 
 ```
-https://raw.githubusercontent.com/drmogie/fga-ammo-tracker/main/module.json
+https://raw.githubusercontent.com/drmogie/fga-foundry-modules/main/modules/fga-ammo-tracker/module.json
 ```
 
 In Foundry: **Add-on Modules > Install Module**, paste the URL above,
