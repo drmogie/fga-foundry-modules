@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026.09.29.16
+- Synced with the module code from the foundry-mcp repository (module 2026.09.29.16): advantage and disadvantage for attacks, and the board tools.
+
 ## 2026.09.29.15
 - Moved into the fga-foundry-modules repository. Install links changed.
 - No code changes.

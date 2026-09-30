@@ -1,13 +1,13 @@
-# FGA Relay Connect
+# VTT MCP Rest Connector
 
-Version: 2026.09.29.15
+Version: 2026.09.29.16
 
 Foundry module that links one browser to your Foundry VTT MCP & Rest Relay (add-on in https://github.com/drmogie/ha-foundry-vtt-addon).
 
 ## Use
 - Copy the `fga-relay-connect` folder into Foundry `Data/modules`.
 - Restart Foundry and turn the module on.
-- Game Settings, Configure Settings, FGA Relay Connect.
+- Game Settings, Configure Settings, VTT MCP Rest Connector.
 - Paste the relay address and connect key from the relay page.
 - Turn on "Connect this browser to the relay".
 
@@ -26,7 +26,7 @@ Settings are per browser. Players leave it off.
 ## Changelog
 ### 2026.09.29.14
 
-- First release in its own GitHub repository. Added manifest and download links, LICENSE and CHANGELOG. No code changes.
+- Using an item can roll its attack with advantage or disadvantage.
 
 ### 2026.09.29.13
 
@@ -82,10 +82,3 @@ Settings are per browser. Players leave it off.
 
 ### 2026.09.29.1
 - First version.
-
-## Install from GitHub
-
-In Foundry, open Add-on Modules, then Install Module.
-Paste this Manifest URL and click Install:
-
-`https://raw.githubusercontent.com/drmogie/fga-foundry-modules/main/modules/fga-relay-connect/module.json`

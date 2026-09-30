@@ -61,9 +61,9 @@ Version 2026.09.29.02
 https://raw.githubusercontent.com/drmogie/fga-foundry-modules/main/modules/fga-mount-action/module.json
 ```
 
-### FGA Relay Connect
+### VTT MCP Rest Connector
 
-Version 2026.09.29.15
+Version 2026.09.29.16
 
 ```
 https://raw.githubusercontent.com/drmogie/fga-foundry-modules/main/modules/fga-relay-connect/module.json

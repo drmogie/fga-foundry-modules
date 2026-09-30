@@ -16,7 +16,7 @@ https://raw.githubusercontent.com/drmogie/fga-foundry-modules/main/modules/fga-c
 FGA Mount Action (2026.09.29.02)
 https://raw.githubusercontent.com/drmogie/fga-foundry-modules/main/modules/fga-mount-action/module.json
 
-FGA Relay Connect (2026.09.29.15)
+VTT MCP Rest Connector (2026.09.29.16)
 https://raw.githubusercontent.com/drmogie/fga-foundry-modules/main/modules/fga-relay-connect/module.json
 
 FGA Scene Director (2026.09.29.02)
