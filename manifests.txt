@@ -1,0 +1,24 @@
+D&D Beyond Live Importer (2026.09.29.02)
+https://raw.githubusercontent.com/drmogie/fga-foundry-modules/main/modules/ddb-live-importer/module.json
+
+FGA Ammo Tracker (2026.09.29.03)
+https://raw.githubusercontent.com/drmogie/fga-foundry-modules/main/modules/fga-ammo-tracker/module.json
+
+FGA Auto Damage (2026.09.29.04)
+https://raw.githubusercontent.com/drmogie/fga-foundry-modules/main/modules/fga-auto-damage/module.json
+
+FGA Battle Director (2026.09.29.02)
+https://raw.githubusercontent.com/drmogie/fga-foundry-modules/main/modules/fga-battle-director/module.json
+
+FGA Character Popup (2026.09.29.03)
+https://raw.githubusercontent.com/drmogie/fga-foundry-modules/main/modules/fga-character-popup/module.json
+
+FGA Mount Action (2026.09.29.02)
+https://raw.githubusercontent.com/drmogie/fga-foundry-modules/main/modules/fga-mount-action/module.json
+
+FGA Relay Connect (2026.09.29.15)
+https://raw.githubusercontent.com/drmogie/fga-foundry-modules/main/modules/fga-relay-connect/module.json
+
+FGA Scene Director (2026.09.29.02)
+https://raw.githubusercontent.com/drmogie/fga-foundry-modules/main/modules/fga-scene-director/module.json
+
