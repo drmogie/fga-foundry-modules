@@ -1,0 +1,87 @@
+/* The freeform on-screen staging layer where character portraits are placed, dragged,
+   flipped, and rotated during scene playback. GM-facing controls (the flip/rotate menu)
+   live inside each portrait and are hidden as a group via the "tools-hidden" class. */
+#fga-sd-staging-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+}
+
+.fga-sd-portrait {
+  position: absolute;
+  pointer-events: auto;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  will-change: left, top, transform, opacity;
+}
+
+.fga-sd-portrait:active {
+  cursor: grabbing;
+}
+
+/* Non-GM clients (players) get the mirrored portrait purely as a display — no drag, no
+   select outline, no editor menu (none is even created for them). */
+.fga-sd-portrait.viewer-only {
+  pointer-events: none;
+  cursor: default;
+}
+
+.fga-sd-portrait img {
+  display: block;
+  height: 45vh;
+  width: auto;
+  max-width: 40vw;
+  object-fit: contain;
+  pointer-events: none;
+  will-change: filter, opacity, clip-path;
+  /* Base drop-shadow (and, when the character is obscured, a blur or shadow/silhouette filter
+     alongside it) is applied inline by staging-view.js so the reveal-sequence transition can
+     animate just the filter, independent of any stylesheet rule. Fade/Teleport Obscure styles
+     (and the matching Fade Movement/Teleport Movement transition types) likewise drive
+     opacity/clip-path inline — see portraitConcealment/#playMovementTransition. */
+}
+
+.fga-sd-portrait.selected img {
+  outline: 3px solid #ffbb33;
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+/* Small flip/rotate editor menu, anchored inside the portrait's top-left corner. It is a
+   sibling of the <img> (never a child of it), and staging-view.js only ever rotates/flips
+   the <img> itself, so this menu always stays upright and in this same corner regardless of
+   the character's own rotation/flip state. */
+.fga-sd-portrait-menu {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: rgba(20, 20, 24, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  padding: 6px 8px;
+  pointer-events: auto;
+  cursor: default;
+}
+
+.fga-sd-portrait-menu label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #eee;
+  white-space: nowrap;
+}
+
+.fga-sd-portrait-menu input[type="number"] {
+  width: 52px;
+}
+
+#fga-sd-staging-layer.tools-hidden .fga-sd-portrait-menu,
+.fga-sd-portrait.tools-hidden .fga-sd-portrait-menu {
+  display: none;
+}

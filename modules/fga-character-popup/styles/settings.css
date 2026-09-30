@@ -1,0 +1,177 @@
+/* The settings forms (player, GM rules, and appearance overrides) */
+
+/* Belt-and-suspenders: whatever height the window itself ends up, the
+   form content scrolls internally instead of running off the bottom of
+   the screen. */
+.ccp-settings-form {
+  max-height: 75vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.ccp-settings-form .form-group {
+  margin-bottom: 0.75rem;
+}
+
+.ccp-settings-form label {
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.ccp-settings-form .hint {
+  font-size: 0.85em;
+  opacity: 0.8;
+}
+
+.ccp-settings-form input[type="range"] {
+  width: 100%;
+}
+
+.ccp-settings-form input[type="number"] {
+  width: 100%;
+}
+
+.ccp-settings-form .form-footer {
+  margin-top: 1rem;
+  text-align: right;
+}
+
+.ccp-settings-form hr {
+  margin: 1rem 0;
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.ccp-settings-form .ccp-override-note {
+  color: #ffb3b3;
+}
+
+.ccp-settings-form .ccp-bloodied-section,
+.ccp-settings-form .ccp-heal-section,
+.ccp-settings-form .ccp-bubble-section {
+  padding-left: 0.5rem;
+  border-left: 2px solid rgba(255, 255, 255, 0.15);
+}
+
+.ccp-settings-form .ccp-always-yours {
+  font-weight: normal;
+  font-size: 0.85em;
+  opacity: 0.75;
+}
+
+/* Two-pane "Configure Character Appearance" window */
+.ccp-overrides-layout {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.ccp-overrides-list {
+  flex: 0 0 190px;
+  max-height: 52vh;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+  border-right: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.ccp-overrides-list button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  color: inherit;
+  padding: 0.35rem 0.5rem;
+  margin-bottom: 0.1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font: inherit;
+}
+
+.ccp-overrides-list button:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.ccp-overrides-list button.active {
+  background: rgba(255, 255, 255, 0.18);
+  font-weight: bold;
+}
+
+.ccp-overrides-list .ccp-overrides-heading {
+  font-size: 0.8em;
+  opacity: 0.65;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin: 0.6rem 0 0.2rem;
+  padding-left: 0.5rem;
+}
+
+.ccp-overrides-list .ccp-overrides-heading:first-child {
+  margin-top: 0;
+}
+
+.ccp-overrides-detail {
+  flex: 1 1 auto;
+  min-width: 0;
+  max-height: 52vh;
+  overflow-y: auto;
+  padding-right: 0.25rem;
+}
+
+.ccp-overrides-detail h3 {
+  margin-top: 0;
+}
+
+.ccp-overrides-detail .ccp-ov-fields {
+  padding-left: 0.5rem;
+  border-left: 2px solid rgba(255, 255, 255, 0.15);
+}
+
+/* "Configure Status Icons" window's condition list */
+.ccp-status-list {
+  max-height: 48vh;
+  overflow-y: auto;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  padding: 0.25rem 0.5rem;
+}
+
+.ccp-status-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.ccp-status-row:last-child {
+  border-bottom: none;
+}
+
+.ccp-status-icon {
+  width: 22px;
+  height: 22px;
+  flex: 0 0 auto;
+}
+
+.ccp-status-name {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ccp-settings-form .ccp-status-radio {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  flex: 0 0 auto;
+  margin: 0;
+  font-size: 0.85em;
+  white-space: nowrap;
+}
+
+.ccp-status-radio input {
+  margin: 0;
+}

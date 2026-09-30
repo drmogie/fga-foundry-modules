@@ -1,0 +1,117 @@
+<div class="ccp-settings-body">
+  <p class="hint">These settings apply to the whole table — only the GM can change them.</p>
+
+  <div class="form-group">
+    <label>Popup Duration: <span id="ccp-duration-output">{{duration}}</span> seconds</label>
+    <input type="range" id="ccp-duration-range" name="duration" min="1" max="30" step="1" value="{{duration}}">
+  </div>
+
+  <div class="form-group">
+    <label><input type="checkbox" name="noTimeout" id="ccp-no-timeout" {{#if noTimeout}}checked{{/if}}> Keep popups on screen with no timeout (ignores duration above — a popup stays until another one replaces it)</label>
+  </div>
+
+  <div class="form-group">
+    <label>Which messages trigger the popup?</label>
+    <label><input type="checkbox" name="triggerIC" {{#if triggerIC}}checked{{/if}}> In-character chat</label>
+    <label><input type="checkbox" name="triggerEmote" {{#if triggerEmote}}checked{{/if}}> Emotes</label>
+    <label><input type="checkbox" name="triggerRolls" {{#if triggerRolls}}checked{{/if}}> Dice rolls</label>
+  </div>
+
+  <div class="form-group">
+    <label><input type="checkbox" name="triggerNPCs" {{#if triggerNPCs}}checked{{/if}}> Also trigger for GM/NPC-spoken messages</label>
+  </div>
+
+  <hr>
+
+  <div class="form-group">
+    <label><input type="checkbox" name="bloodiedEnabled" {{#if bloodiedEnabled}}checked{{/if}}> Show a red aura when a character or NPC is bloodied (low HP)</label>
+  </div>
+
+  <div class="ccp-bloodied-section">
+    <div class="form-group">
+      <label>Preview (only visible to you)</label>
+      <div class="ccp-preview-box">
+        <div class="ccp-preview-thumb ccp-bloodied" id="ccp-bloodied-preview-thumb">
+          <img src="{{previewImg}}" alt="Bloodied preview">
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Bloodied threshold: <span id="ccp-bloodied-output">{{bloodiedThreshold}}</span>% HP or below</label>
+      <input type="range" id="ccp-bloodied-range" name="bloodiedThreshold" min="1" max="99" step="1" value="{{bloodiedThreshold}}">
+    </div>
+
+    <div class="form-group">
+      <label><input type="checkbox" name="bloodiedAutoPopup" {{#if bloodiedAutoPopup}}checked{{/if}}> Also pop up automatically the instant someone crosses into bloodied (not just when they speak)</label>
+    </div>
+  </div>
+
+  <hr>
+
+  <div class="form-group">
+    <label><input type="checkbox" name="healAuraEnabled" {{#if healAuraEnabled}}checked{{/if}}> Show a green aura when healed, or gold when revived from 0 HP — both pop up automatically the instant they happen</label>
+  </div>
+
+  <div class="ccp-heal-section">
+    <div class="form-group">
+      <label>Preview (only visible to you)</label>
+      <div class="ccp-heal-preview-row">
+        <div class="ccp-preview-box ccp-preview-box-small">
+          <div class="ccp-preview-thumb ccp-healed" id="ccp-healed-preview-thumb">
+            <img src="{{previewImg}}" alt="Healed preview">
+          </div>
+        </div>
+        <div class="ccp-preview-box ccp-preview-box-small">
+          <div class="ccp-preview-thumb ccp-revived" id="ccp-revived-preview-thumb">
+            <img src="{{previewImg}}" alt="Revived preview">
+          </div>
+        </div>
+      </div>
+      <p class="hint">Left: green, healed while already conscious. Right: gold, revived from 0 HP.</p>
+    </div>
+
+    <p class="hint">Green fires on any HP increase above 0 HP; gold fires only the moment someone goes from 0 HP to above 0. Only one aura shows per heal — a revival always shows gold, never both.</p>
+  </div>
+
+  <hr>
+
+  <div class="form-group">
+    <label><input type="checkbox" name="chatBubbleEnabled" {{#if chatBubbleEnabled}}checked{{/if}}> Also show a chat bubble with the message text when a popup is triggered by someone speaking in chat</label>
+  </div>
+
+  <div class="ccp-bubble-section">
+    <div class="form-group">
+      <label>Preview (only visible to you)</label>
+      <div class="ccp-bubble-preview-box">
+        <div class="ccp-chat-bubble ccp-chat-bubble-static" id="ccp-bubble-preview" data-tail="center" style="--ccp-bubble-height: {{chatBubbleHeight}}px; --ccp-bubble-bg: {{chatBubbleColor.color}}; --ccp-bubble-fg: {{chatBubbleColor.fg}}; --ccp-bubble-border: {{chatBubbleColor.border}};">
+          <span class="ccp-bubble-name">{{previewName}}:</span>
+          <span class="ccp-bubble-text">This is what a chat bubble line looks like.</span>
+        </div>
+      </div>
+      <p class="hint">The bubble itself always stays fixed top-center — only its tail moves, pointing left/center/right toward whichever side of the screen that viewer's own popup is positioned on. This preview always shows it centered, using your own assigned character's bubble color (or the module default if you don't have one set).</p>
+    </div>
+
+    <p class="hint">Bubble and text color aren't set here — each player picks their own character's colors in <strong>Configure Your Popup</strong>, and everyone sees those same colors whenever that character speaks, so color becomes a visual cue for who's talking. Text color defaults to the exact inverse of the bubble color, but a player can pick their own if the auto-inverse looks off.</p>
+
+    <div class="form-group">
+      <label>Bubble width: <span id="ccp-bubble-width-output">{{chatBubbleWidth}}</span>px</label>
+      <input type="range" id="ccp-bubble-width-range" name="chatBubbleWidth" min="200" max="800" step="10" value="{{chatBubbleWidth}}">
+    </div>
+
+    <div class="form-group">
+      <label>Bubble min height: <span id="ccp-bubble-height-output">{{chatBubbleHeight}}</span>px</label>
+      <input type="range" id="ccp-bubble-height-range" name="chatBubbleHeight" min="50" max="300" step="10" value="{{chatBubbleHeight}}">
+    </div>
+
+    <p class="hint">Only shows for popups triggered by an actual chat message — bloodied/healed/revived and status-icon popups have no line to display, so they never get a bubble. Dice-roll-only messages are skipped too (nothing to show).</p>
+  </div>
+
+  <hr>
+
+  <p class="hint">Want to force a specific look for players, NPCs, or one particular character? That's its own window now — look for <strong>"Configure Character Appearance"</strong> in Game Settings.</p>
+
+  <footer class="form-footer">
+    <button type="submit"><i class="fa-solid fa-save"></i> Save</button>
+  </footer>
+</div>

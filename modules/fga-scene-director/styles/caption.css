@@ -1,0 +1,40 @@
+/* Closed-caption-style dialogue bar. Background color/opacity is set inline by
+   caption-bar.js from the configured style; position and offset are handled here. */
+#fga-sd-caption-bar {
+  position: fixed;
+  left: 50%;
+  z-index: 30;
+  max-width: 70vw;
+  min-width: 220px;
+  padding: 10px 20px;
+  border-radius: 6px;
+  color: #fff;
+  font-size: 20px;
+  line-height: 1.4;
+  text-align: center;
+  pointer-events: none;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+  --fga-sd-caption-offset-x: 0px;
+  --fga-sd-caption-offset-y: 0px;
+  transition: opacity 200ms ease;
+}
+
+#fga-sd-caption-bar.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+#fga-sd-caption-bar[data-location="bottom"] {
+  bottom: 6vh;
+  transform: translate(calc(-50% + var(--fga-sd-caption-offset-x)), var(--fga-sd-caption-offset-y));
+}
+
+#fga-sd-caption-bar[data-location="top"] {
+  top: 6vh;
+  transform: translate(calc(-50% + var(--fga-sd-caption-offset-x)), var(--fga-sd-caption-offset-y));
+}
+
+#fga-sd-caption-bar[data-location="center"] {
+  top: 50%;
+  transform: translate(calc(-50% + var(--fga-sd-caption-offset-x)), calc(-50% + var(--fga-sd-caption-offset-y)));
+}

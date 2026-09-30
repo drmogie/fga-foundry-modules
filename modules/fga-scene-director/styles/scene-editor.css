@@ -1,0 +1,975 @@
+/* ---------------------------------------------------------------------------
+   Scene Editor Window — two-region layout (left: scene list, right: timeline)
+   --------------------------------------------------------------------------- */
+
+.fga-sd-editor .window-content {
+  padding: 0;
+  overflow: hidden;
+}
+
+.fga-sd-editor-root {
+  display: flex;
+  height: 100%;
+  min-height: 0;
+  color: var(--color-text-light-highlight, #eee);
+}
+
+/* ---- Left panel: scene list ---- */
+
+.fga-sd-left-panel {
+  flex: 0 0 190px;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  border-right: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(0, 0, 0, 0.15);
+}
+
+.fga-sd-new-scene {
+  flex: 0 0 auto;
+  margin: 8px;
+  padding: 8px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.fga-sd-scene-list {
+  list-style: none;
+  margin: 0;
+  padding: 0 6px 8px;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+}
+
+.fga-sd-scene-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 7px 6px 7px 10px;
+  margin-bottom: 3px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.fga-sd-scene-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.fga-sd-scene-item.active {
+  background: rgba(255, 187, 51, 0.22);
+  box-shadow: inset 3px 0 0 #ffbb33;
+}
+
+.fga-sd-scene-item-name {
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fga-sd-scene-item-delete {
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  cursor: pointer;
+  opacity: 0.35;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+}
+
+.fga-sd-scene-item-delete:hover {
+  opacity: 1;
+  background: rgba(255, 68, 68, 0.3);
+  box-shadow: inset 0 0 0 1px #ff4444;
+}
+
+/* ---- Right panel: builder/editor timeline ---- */
+
+.fga-sd-right-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+}
+
+.fga-sd-right-header {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.fga-sd-editor-tools-toggle {
+  flex: 0 0 auto;
+  width: 30px;
+  height: 30px;
+  border-radius: 4px;
+  cursor: pointer;
+  opacity: 0.6;
+}
+
+.fga-sd-editor-tools-toggle.on {
+  opacity: 1;
+  background: rgba(255, 187, 51, 0.25);
+  box-shadow: inset 0 0 0 1px #ffbb33;
+}
+
+.fga-sd-show-all {
+  flex: 0 0 auto;
+  width: 30px;
+  height: 30px;
+  border-radius: 4px;
+  cursor: pointer;
+  opacity: 0.6;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fga-sd-show-all:hover {
+  opacity: 1;
+  background: rgba(51, 153, 255, 0.2);
+  box-shadow: inset 0 0 0 1px #3399ff;
+}
+
+.fga-sd-scene-name {
+  flex: 1;
+  min-width: 0;
+}
+
+.fga-sd-next {
+  flex: 0 0 auto;
+  padding: 6px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  background: rgba(51, 153, 255, 0.25);
+  box-shadow: inset 0 0 0 1px #3399ff;
+}
+
+.fga-sd-next:disabled,
+.fga-sd-fire-now:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* Auto Play toggle — sits just to the left of Next. Green "go" look when idle, switches to a
+   red "stop" look (via .active, set whenever Auto Play is running OR halted at a Pause) so
+   it's unmistakable at a glance whether the timeline is currently driving itself. */
+.fga-sd-auto-play {
+  flex: 0 0 auto;
+  padding: 6px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  background: rgba(51, 204, 119, 0.25);
+  box-shadow: inset 0 0 0 1px #33cc77;
+}
+
+.fga-sd-auto-play.active {
+  background: rgba(255, 68, 68, 0.25);
+  box-shadow: inset 0 0 0 1px #ff4444;
+}
+
+/* The big, hard-to-miss banner shown only while Auto Play is halted at a Pause ("Scene
+   Controls") section — the "large pause button" the GM clicks to keep going. Sits between the
+   header and the timeline so it's visible the instant the panel is looked at, not buried in
+   the scrolled list next to the Pause row itself. */
+.fga-sd-auto-pause-banner {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: rgba(255, 204, 0, 0.18);
+  border-bottom: 1px solid rgba(255, 204, 0, 0.4);
+  font-weight: 600;
+  color: #ffdd55;
+}
+
+.fga-sd-auto-pause-banner i {
+  font-size: 18px;
+}
+
+.fga-sd-auto-pause-banner span {
+  flex: 1;
+  min-width: 0;
+}
+
+.fga-sd-auto-continue {
+  flex: 0 0 auto;
+  padding: 10px 22px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 14px;
+  background: rgba(51, 204, 119, 0.3);
+  box-shadow: inset 0 0 0 2px #33cc77;
+}
+
+/* ---- Lock Scene: freezes a scene's structure/character references (see scene-data.js's
+   lockScene) so it can be triggered from any Foundry scene without accidentally editing it
+   out from under itself. The header toggle switches look (open padlock -> closed, amber ->
+   red) the same way Auto Play's own button does; the banner + greyed-out/pointer-events:none
+   panels below are the visible half of the freeze, the SceneData-layer guards are the real
+   enforcement. ---- */
+.fga-sd-lock-scene {
+  flex: 0 0 auto;
+  padding: 6px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  background: rgba(255, 187, 51, 0.2);
+  box-shadow: inset 0 0 0 1px #ffbb33;
+}
+
+.fga-sd-lock-scene.on {
+  background: rgba(255, 68, 68, 0.22);
+  box-shadow: inset 0 0 0 1px #ff4444;
+}
+
+.fga-sd-locked-banner {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  background: rgba(255, 68, 68, 0.14);
+  border-bottom: 1px solid rgba(255, 68, 68, 0.35);
+  font-weight: 600;
+  color: #ff8888;
+  font-size: 12px;
+}
+
+.fga-sd-scene-item-lock-icon {
+  flex: 0 0 auto;
+  opacity: 0.7;
+  font-size: 11px;
+  color: #ff8888;
+}
+
+/* Freezes every edit control while the active scene is locked: the create/remove/manual-
+   actions footer, per-section character picker/details/drag-handle/delete, the rename input,
+   and the Stage Character picker grid. Deliberately NOT listed here (stay fully usable while
+   locked, since firing a locked scene from wherever you are is the whole point): Fire Now,
+   the collapse toggle, Auto Play, Next, the Lock/Unlock button itself, and switching between
+   scenes in the left panel. */
+.fga-sd-right-panel.fga-sd-locked .fga-sd-add-buttons,
+.fga-sd-right-panel.fga-sd-locked .fga-sd-scene-name,
+.fga-sd-right-panel.fga-sd-locked .fga-sd-character-select,
+.fga-sd-right-panel.fga-sd-locked .fga-sd-section-details,
+.fga-sd-right-panel.fga-sd-locked .fga-sd-section-drag-handle,
+.fga-sd-right-panel.fga-sd-locked .fga-sd-section-delete,
+.fga-sd-right-panel.fga-sd-locked .fga-sd-expand-group,
+.fga-sd-right-panel.fga-sd-locked .fga-sd-auto-delay,
+.fga-sd-right-panel.fga-sd-locked .fga-sd-pause-skip-toggle,
+.fga-sd-right-panel.fga-sd-locked .fga-sd-stage-thumb-grid,
+.fga-sd-right-panel.fga-sd-locked .fga-sd-stage-thumb-scale {
+  pointer-events: none;
+  opacity: 0.45;
+}
+
+.fga-sd-timeline {
+  list-style: none;
+  margin: 0;
+  padding: 10px;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+}
+
+.fga-sd-section {
+  position: relative;
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  padding: 8px 30px 8px 10px;
+  margin-bottom: 8px;
+  border-radius: 6px;
+  border-left: 4px solid #888;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.fga-sd-section.drag-over {
+  outline: 2px dashed #ffbb33;
+  outline-offset: 2px;
+}
+
+.fga-sd-section.next-up {
+  outline: 2px solid #33cc77;
+  outline-offset: 1px;
+  box-shadow: 0 0 10px rgba(51, 204, 119, 0.5);
+}
+
+.fga-sd-section-character { border-left-color: #3399ff; }
+.fga-sd-section-characterControl { border-left-color: #33bbbb; }
+.fga-sd-section-line { border-left-color: #33cc77; }
+.fga-sd-section-clearCharacter { border-left-color: #ff9933; }
+.fga-sd-section-clearText { border-left-color: #999; }
+.fga-sd-section-backgroundEffect { border-left-color: #b266ff; }
+.fga-sd-section-clearBackgroundEffect { border-left-color: #b266ff; border-left-style: dashed; }
+.fga-sd-section-clearScene { border-left-color: #e0a030; }
+.fga-sd-section-pause { border-left-color: #ffcc00; border-left-style: dotted; }
+
+.fga-sd-section-drag-handle {
+  flex: 0 0 auto;
+  cursor: grab;
+  opacity: 0.4;
+  padding-top: 4px;
+}
+
+.fga-sd-section-drag-handle:active {
+  cursor: grabbing;
+}
+
+.fga-sd-section-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* flex-wrap is deliberately NOT "wrap" here (it was, until Mogie caught it live) — with wrap
+   allowed, the row would let its whole actions cluster (time/fire/collapse) drop to a second
+   line the moment the select/summary text didn't fit, landing it out of line with the delete
+   trash can pinned to the section's top-right corner. nowrap forces the row to instead shrink
+   its one flexible middle child (the select, or the summary text when collapsed — both already
+   min-width:0 below) down as far as needed, so time/fire/collapse — and every other row's, for
+   comparison scanning down the timeline — always stay on the same line as delete. */
+.fga-sd-section-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: nowrap;
+}
+
+/* Foundry's own stylesheet gives <select> a default width:100%, which — inside a section
+   row that also has a Fire/collapse button — filled the whole row width and pushed those
+   buttons onto their own wrapped second line, away from the trash icon. Letting the select
+   shrink to share the row keeps every row's manual-trigger buttons (play/collapse) on the
+   same line, flush next to the delete trash can, for every section type consistently. */
+.fga-sd-section-row select {
+  flex: 1 1 auto;
+  width: auto;
+  min-width: 0;
+}
+
+/* Character section's own character-picker select only (other section types' pickers keep
+   growing to fill the row — Mogie only asked for this one). Capping its CLOSED width is what
+   guarantees time/fire/collapse always have room on the same line, rather than relying only
+   on flex-shrink leaving them whatever's left over. The dropdown POPUP itself is unaffected —
+   browsers size an open <select>'s option list to fit its widest option text, not clamped to
+   the closed box's own width, so long character names are still fully readable on click. */
+.fga-sd-character-select {
+  flex: 0 1 200px;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fga-sd-section-details {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 6px 0 2px 4px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.fga-sd-section-details label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.fga-sd-section-details input[type="number"] {
+  width: 60px;
+}
+
+/* Character (Add) section only: its details block got crowded with everything in one flat
+   row, so it's broken into labeled sub-groups (Appearance / Timing / Obscure-Reveal /
+   Position), each stacked on its own line with a thin separator, rather than one long
+   wrapping soup of fields. Other section types keep the plain flat-row layout above — this
+   only applies where the extra `fga-sd-section-details-grouped` class is present. */
+.fga-sd-section-details.fga-sd-section-details-grouped {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+}
+
+.fga-sd-subsection {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.fga-sd-subsection:first-child {
+  padding-top: 0;
+  border-top: none;
+}
+
+.fga-sd-subsection-title {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  opacity: 0.5;
+}
+
+.fga-sd-subsection-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.fga-sd-scale-field {
+  gap: 6px !important;
+}
+
+.fga-sd-scale-field input[type="range"] {
+  width: 90px;
+}
+
+.fga-sd-scale-field input.fga-sd-scale-number {
+  width: 52px !important;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.fga-sd-quick-position {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+}
+
+.fga-sd-quick-position button {
+  padding: 2px 8px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 11px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* "Remembered" quick-position button — acts like a checkbox, so the highlight is purely
+   this activation flag, never inferred from the section's current x (a dragged/nudged
+   position can coincidentally match 18/50/82 without that button being "activated"). */
+.fga-sd-quick-position button.active {
+  border: 1px solid #33cc77;
+  box-shadow: inset 0 0 0 1px #33cc77;
+}
+
+.fga-sd-locks {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
+
+/* Position Lock slot buttons — mirrors .fga-sd-quick-position's sizing, plus two extra
+   states quick-position doesn't have: not-the-current-slot (orange — whether or not it has
+   saved data yet; see extra.locks in scene-editor.js's _prepareContext) and currently-active
+   (red). */
+.fga-sd-lock-btn {
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 10px;
+  line-height: 1;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Has a saved position, but isn't THIS section's current slot (plain/gray = nothing saved
+   there yet — the base .fga-sd-lock-btn style above). Clicking a saved-but-not-active slot
+   recalls it. */
+.fga-sd-lock-btn.saved {
+  border: 1px solid #e69138;
+  box-shadow: inset 0 0 0 1px #e69138;
+  color: #e69138;
+}
+
+/* This section is currently at this lock's saved position. */
+.fga-sd-lock-btn.active {
+  border: 1px solid #cc3333;
+  box-shadow: inset 0 0 0 1px #cc3333;
+  color: #cc3333;
+}
+
+/* Character Control sections only (see extra.locks in scene-editor.js) — an empty slot has
+   nothing to recall and nothing of its own to save into it, so it's inert rather than
+   silently doing nothing on click. */
+.fga-sd-lock-btn:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+/* Clear button (an "x", solid red) sitting right after lock slot 10 — deletes the saved
+   position from this section's currently active lock slot (see #onClearActiveLock). Solid
+   fill instead of the numbered buttons' outline style so it doesn't read as an 11th slot to
+   pick from. Disabled/dim whenever no lock is currently active for this section. */
+.fga-sd-lock-clear-btn {
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  margin-left: 4px;
+  padding: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 10px;
+  border: 1px solid #cc3333;
+  background: rgba(204, 51, 51, 0.35);
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fga-sd-lock-clear-btn:hover:not(:disabled) {
+  background: rgba(204, 51, 51, 0.6);
+}
+
+.fga-sd-lock-clear-btn:disabled {
+  opacity: 0.25;
+  cursor: default;
+}
+
+.fga-sd-checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Clear Character's checkbox-per-active-member list (replaces the old single-select
+   dropdown) — wraps like a tag list rather than stacking one per line, since a scene can
+   have a lot of members on stage at once. */
+.fga-sd-clear-character-targets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin-bottom: 4px;
+}
+
+.fga-sd-clear-character-empty {
+  font-size: 12px;
+  opacity: 0.6;
+  font-style: italic;
+}
+
+/* Character Control's single-select checkbox picker (replaces its old dropdown) — same
+   wrapping tag-list layout as Clear Character's multi-select list above. A checkbox
+   disabled by _prepareContext's controlTargets (every OTHER character once one is picked)
+   dims its own label so it visually reads as "locked out" rather than just unclickable. */
+.fga-sd-cc-character-checks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin-bottom: 4px;
+}
+
+.fga-sd-cc-character-checks label:has(input:disabled) {
+  opacity: 0.4;
+}
+
+/* Stage Character's image-grid multi-select picker. The scale slider sits centered above the
+   grid; --fga-sd-thumb-scale (set inline from the section's own thumbScale field, and live-
+   updated on the slider's "input" event before it's persisted on "change") drives every
+   thumbnail's size off one shared base so the whole grid scales together. */
+.fga-sd-stage-thumb-scale {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.fga-sd-stage-thumb-scale label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  opacity: 0.85;
+}
+
+.fga-sd-stage-thumb-scale input[type="range"] {
+  width: 160px;
+}
+
+.fga-sd-stage-thumb-grid {
+  --fga-sd-thumb-scale: 0.3;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.fga-sd-stage-thumb-header {
+  flex: 1 0 100%;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  opacity: 0.65;
+  margin-top: 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  padding-bottom: 2px;
+}
+
+.fga-sd-stage-thumb-header:first-child {
+  margin-top: 0;
+}
+
+/* Each tile is a <label> wrapping a visually-hidden checkbox, so the whole image+name area is
+   clickable without needing separate click-handling JS — same accessible-label pattern the
+   module's other checkbox lists (Clear Character, Character Control) already rely on. */
+.fga-sd-stage-thumb-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: calc(200px * var(--fga-sd-thumb-scale, 0.3));
+  cursor: pointer;
+}
+
+.fga-sd-stage-thumb-item input[type="checkbox"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.fga-sd-stage-thumb-item img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 2px solid transparent;
+  box-shadow: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* The amber "selected" aura Mogie asked for — a visible ring plus a soft glow, so a selected
+   character reads clearly even at the smallest thumbnail scale. */
+.fga-sd-stage-thumb-item.selected img {
+  border-color: #e0a030;
+  box-shadow: 0 0 10px 2px rgba(224, 160, 48, 0.65);
+}
+
+.fga-sd-stage-thumb-name {
+  font-size: 11px;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+.fga-sd-section-summary-text {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  opacity: 0.85;
+  font-size: 13px;
+  padding: 4px 0;
+}
+
+/* Trailing per-row controls (Expand Group when present, Fire Now, Collapse Toggle) are
+   grouped into one atomic flex cluster rather than sitting loose in .fga-sd-section-row.
+   Two problems this fixes:
+   1. Some row types (clearText, clearScene) have no Collapse Toggle at all, which used to
+      let their lone Fire Now button slide into the "collapse slot" and land ~34px further
+      right than every other row's Fire button — a real, guaranteed misalignment scanning
+      down the timeline, not just a narrow-window edge case. A same-size invisible spacer
+      (.fga-sd-collapse-spacer) takes the collapse toggle's place on those rows so Fire Now
+      always sits in the same slot everywhere.
+   2. This cluster is a single flex: 0 0 auto item with its own flex-wrap: nowrap, so its
+      children (Expand Group when present, the clock icon/delay box, Fire Now, Collapse
+      Toggle) can never split from each other onto separate lines. Whether the cluster AS A
+      WHOLE could still drop to a second line, away from the delete trash can, used to depend
+      on .fga-sd-section-row's own flex-wrap — that's now nowrap too (see its comment above),
+      so this is fully pinned to one line. margin-left: auto is a defensive backstop that
+      keeps the cluster right-flush even if the select's flex-shrink/min-width:0 doesn't fully
+      claim the row's slack. */
+.fga-sd-section-actions {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: nowrap;
+  margin-left: auto;
+}
+
+.fga-sd-collapse-toggle,
+.fga-sd-fire-now,
+.fga-sd-pause-skip-toggle {
+  flex: 0 0 auto;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fga-sd-fire-now {
+  background: rgba(51, 204, 119, 0.25);
+  box-shadow: inset 0 0 0 1px #33cc77;
+}
+
+/* Pause section's own "skip in Auto Play" toggle, left of that row's Fire button — off by
+   default (plain/dim, matches every prior version's behavior: every Pause halts Auto Play),
+   yellow when on (Auto Play bypasses this Pause's halt entirely — see #autoStep). */
+.fga-sd-pause-skip-toggle {
+  opacity: 0.5;
+}
+
+.fga-sd-pause-skip-toggle.on {
+  opacity: 1;
+  background: rgba(224, 224, 48, 0.25);
+  box-shadow: inset 0 0 0 1px #e0e030;
+  color: #e0e030;
+}
+
+.fga-sd-pause-skip-toggle:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.fga-sd-pause-skipped-tag {
+  margin-left: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #e0e030;
+}
+
+/* Stage Character's "Always active" tag, replacing the clock/auto-delay box every other
+   section type has — this card fires and advances immediately during Auto Play, so there's
+   nothing to configure a wait for. Reuses the module's amber accent color (see the thumb
+   grid's own selection aura) so it reads as a calm status label, not a warning. */
+.fga-sd-always-active-tag {
+  font-size: 11px;
+  font-weight: 600;
+  color: #e0a030;
+  white-space: nowrap;
+}
+
+.fga-sd-collapse-spacer {
+  flex: 0 0 auto;
+  width: 26px;
+  height: 26px;
+}
+
+.fga-sd-auto-delay-icon {
+  flex: 0 0 auto;
+  font-size: 11px;
+  opacity: 0.45;
+}
+
+/* Per-section "how long Auto Play waits after firing this before advancing" field. Deliberately
+   left visible in the row itself (not tucked into the collapsible details block) since it's
+   the kind of value a GM wants to glance at and tune while scanning down the whole timeline,
+   not something to hunt for per-section. */
+.fga-sd-auto-delay {
+  flex: 0 0 auto;
+  width: 56px;
+  height: 26px;
+  padding: 0 4px;
+  border-radius: 4px;
+  text-align: center;
+  font-size: 11px;
+}
+
+.fga-sd-expand-group {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 11px;
+  white-space: nowrap;
+  background: rgba(168, 122, 255, 0.2);
+  box-shadow: inset 0 0 0 1px #a87aff;
+}
+
+.fga-sd-section textarea {
+  width: 100%;
+  resize: vertical;
+}
+
+.fga-sd-visibility-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+/* Bubble checkbox: only meaningful on a Private line (Public lines hand the visual off to
+   chat entirely), so it's disabled rather than hidden when Public — greyed out to signal
+   why, without the row's layout jumping every time the GM flips Public/Private. */
+.fga-sd-bubble-toggle:has(input:disabled) {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.fga-sd-section-delete {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  cursor: pointer;
+  opacity: 0.45;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fga-sd-section-delete:hover {
+  opacity: 1;
+  background: rgba(255, 68, 68, 0.25);
+  box-shadow: inset 0 0 0 1px #ff4444;
+}
+
+.fga-sd-add-buttons {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.fga-sd-button-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.fga-sd-button-group + .fga-sd-button-group {
+  padding-top: 6px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.fga-sd-button-group-title {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  opacity: 0.5;
+}
+
+.fga-sd-button-group-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.fga-sd-add-buttons button {
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.fga-sd-delete-all-sections {
+  background: rgba(255, 68, 68, 0.18);
+  box-shadow: inset 0 0 0 1px #ff4444;
+}
+
+.fga-sd-empty-state {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.6;
+  font-size: 16px;
+}
+
+/* ---------------------------------------------------------------------------
+   Draggable floating button (film-reel icon) — shows/hides the Scene Editor
+   Window. Left portion of the icon art is transparent so this background
+   color reads through: red while closed, green while open.
+   --------------------------------------------------------------------------- */
+
+#fga-sd-floating-button {
+  position: fixed;
+  z-index: 90;
+  width: 64px;
+  height: 64px;
+  box-sizing: border-box;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  overflow: hidden;
+  cursor: grab;
+  touch-action: none;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+  background-color: #ffffff;
+  transition: background-color 200ms ease, box-shadow 150ms ease;
+}
+
+#fga-sd-floating-button:hover {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.65);
+}
+
+#fga-sd-floating-button:active {
+  cursor: grabbing;
+}
+
+#fga-sd-floating-button img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* The source artwork itself has a soft, mostly-invisible margin baked into the
+     PNG (a faint drop-shadow halo around the reel graphic) — no amount of CSS
+     padding on the button can remove that, since it's part of the image's own
+     pixels. Scaling the image up and letting the button's circular overflow:hidden
+     mask crop the excess is what actually makes the reel fill the button edge to
+     edge with no visible gap. This factor is tuned to the current asset's own margin — if
+     the icon art is swapped again, re-check the fill and adjust as needed. */
+  transform: scale(1.4);
+  pointer-events: none;
+}
+
+#fga-sd-floating-button.state-closed {
+  background-color: #ffffff;
+}
+
+#fga-sd-floating-button.state-open {
+  background-color: #1f7a33;
+}
+
+#fga-sd-floating-button.hidden {
+  display: none;
+}

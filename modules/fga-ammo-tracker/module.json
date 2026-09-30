@@ -1,0 +1,44 @@
+{
+  "id": "fga-ammo-tracker",
+  "title": "FGA Ammo Tracker",
+  "description": "Tracks ammo fired during combat. When combat ends, a chat card lets the archer click a button to roll for retrieving their ammo.",
+  "version": "2026.09.29.02",
+  "bugs": "https://github.com/drmogie/fga-foundry-modules/issues",
+  "download": "https://github.com/drmogie/fga-foundry-modules/releases/download/fga-ammo-tracker-2026.09.29.02/fga-ammo-tracker.zip",
+  "manifest": "https://raw.githubusercontent.com/drmogie/fga-foundry-modules/main/modules/fga-ammo-tracker/module.json",
+  "url": "https://github.com/drmogie/fga-foundry-modules/tree/main/modules/fga-ammo-tracker",
+  "compatibility": {
+    "minimum": "14",
+    "verified": "14"
+  },
+  "authors": [
+    {
+      "name": "DrMogie"
+    }
+  ],
+  "relationships": {
+    "systems": [
+      {
+        "id": "dnd5e",
+        "type": "system",
+        "compatibility": {
+          "minimum": "6.0.0"
+        }
+      }
+    ]
+  },
+  "esmodules": [
+    "scripts/main.js"
+  ],
+  "styles": [
+    "styles/ammo-tracker.css"
+  ],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    }
+  ],
+  "socket": true
+}

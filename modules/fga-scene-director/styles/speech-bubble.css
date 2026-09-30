@@ -1,0 +1,126 @@
+/* Fixed, large "comic" speech bubble — a per-line alternative to the caption bar (see the
+   Line section's own "Bubble" checkbox). Position never moves (top-center); only the tail
+   swaps between three fixed spots to loosely point toward whichever third of the screen the
+   speaking character is staged in. Width/min-height are set inline by speech-bubble.js from
+   the Config Settings window's "Speech bubble sizing" section. */
+#fga-sd-speech-bubble {
+  position: fixed;
+  top: 6vh;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 30;
+  width: 600px;
+  min-height: 120px;
+  max-width: 90vw;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 16px 26px;
+  background: #fff;
+  color: #111;
+  border: 3px solid #111;
+  border-radius: 20px;
+  text-align: center;
+  pointer-events: none;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  transition: opacity 200ms ease;
+}
+
+#fga-sd-speech-bubble.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+#fga-sd-speech-bubble .fga-sd-bubble-speaker {
+  font-weight: 700;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.65;
+}
+
+#fga-sd-speech-bubble .fga-sd-bubble-text {
+  font-size: 21px;
+  line-height: 1.4;
+}
+
+/* The tail: two stacked triangles (outer border-color, inner fill-color, slightly smaller and
+   inset) to fake a bordered comic-bubble point. It jumps between three fixed spots via
+   [data-tail] rather than tracking a continuous position — matching the only three staged
+   positions ("Quick Position" Left/Center/Right, and freeform drag bucketed into thirds) a
+   character's portrait can actually be in.
+
+   For left/right, the tip doesn't just slide sideways under an otherwise-straight-down
+   triangle — the triangle itself leans, so the tip visibly angles off toward that side. That's
+   done by giving the two transparent side-borders unequal widths: the border on the tip's own
+   side is short, the border on the far side is long, so the solid base (touching the bubble)
+   sits mostly to one side of the tip instead of centered over it. `margin-left` is always
+   `-1 × the near-side border width`, which is what keeps the actual tip anchored at the
+   [data-tail] position below regardless of that asymmetry. */
+#fga-sd-speech-bubble::after,
+#fga-sd-speech-bubble::before {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 0;
+  transition: left 150ms ease;
+}
+
+#fga-sd-speech-bubble::after {
+  bottom: -24px;
+  border-top: 24px solid #111;
+}
+
+#fga-sd-speech-bubble::before {
+  bottom: -19px;
+  border-top: 19px solid #fff;
+  z-index: 1;
+}
+
+/* Center: straight down, symmetric. */
+#fga-sd-speech-bubble[data-tail="center"]::after {
+  left: 50%;
+  border-left: 18px solid transparent;
+  border-right: 18px solid transparent;
+  margin-left: -18px;
+}
+
+#fga-sd-speech-bubble[data-tail="center"]::before {
+  left: 50%;
+  border-left: 14px solid transparent;
+  border-right: 14px solid transparent;
+  margin-left: -14px;
+}
+
+/* Left: tip leans toward the left, angling down-and-left rather than pointing straight down. */
+#fga-sd-speech-bubble[data-tail="left"]::after {
+  left: 18%;
+  border-left: 6px solid transparent;
+  border-right: 38px solid transparent;
+  margin-left: -6px;
+}
+
+#fga-sd-speech-bubble[data-tail="left"]::before {
+  left: 18%;
+  border-left: 5px solid transparent;
+  border-right: 30px solid transparent;
+  margin-left: -5px;
+}
+
+/* Right: mirror of left. */
+#fga-sd-speech-bubble[data-tail="right"]::after {
+  left: 82%;
+  border-left: 38px solid transparent;
+  border-right: 6px solid transparent;
+  margin-left: -38px;
+}
+
+#fga-sd-speech-bubble[data-tail="right"]::before {
+  left: 82%;
+  border-left: 30px solid transparent;
+  border-right: 5px solid transparent;
+  margin-left: -30px;
+}

@@ -1,0 +1,16 @@
+{
+  "FGA_AMMO.Card.Title": "Ammo Fired - Retrieve?",
+  "FGA_AMMO.Card.DoneTitle": "Ammo Retrieval",
+  "FGA_AMMO.Card.Button": "Retrieve Ammo",
+  "FGA_AMMO.Card.Result": "{name}: got back {recovered} of {fired}",
+  "FGA_AMMO.Card.ItemMissing": "(item not found, nothing added)",
+  "FGA_AMMO.RollFlavor": "Retrieve {name} (needs {target} or higher)",
+  "FGA_AMMO.Notify.NoGM": "A GM must be online to roll for ammo.",
+  "FGA_AMMO.Notify.NoActor": "Could not find that character.",
+  "FGA_AMMO.Settings.Mode.Name": "Retrieval Method (GM only)",
+  "FGA_AMMO.Settings.Mode.Hint": "Die rolls: one d20 per piece of ammo. 5e rules: get back half of what was fired, rounded down.",
+  "FGA_AMMO.Settings.Mode.Dice": "Die rolls",
+  "FGA_AMMO.Settings.Mode.Half": "5e rules (half, rounded down)",
+  "FGA_AMMO.Settings.Target.Name": "Retrieval Target Number",
+  "FGA_AMMO.Settings.Target.Hint": "Each piece of ammo gets one d20. A roll at or above this number gets it back."
+}

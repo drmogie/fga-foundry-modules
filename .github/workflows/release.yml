@@ -1,0 +1,39 @@
+name: Release changed modules
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "modules/**"
+      - ".github/workflows/release.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Release each module whose version is new
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          for dir in modules/*/; do
+            id=$(basename "$dir")
+            version=$(jq -r .version "$dir/module.json")
+            tag="$id-$version"
+            if gh release view "$tag" >/dev/null 2>&1; then
+              echo "$tag already released"
+              continue
+            fi
+            (cd "$dir" && zip -r "../../$id.zip" . -x "tests/*" "*.zip")
+            gh release create "$tag" "$id.zip" \
+              --target "$GITHUB_SHA" \
+              --title "$id $version" \
+              --notes "See modules/$id/CHANGELOG.md"
+            rm -f "$id.zip"
+            echo "released $tag"
+          done

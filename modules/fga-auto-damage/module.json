@@ -1,0 +1,40 @@
+{
+  "id": "fga-auto-damage",
+  "title": "FGA Auto Damage",
+  "description": "Rolls damage for you right after an attack roll. Each player picks their own rules: on a hit, on a critical hit only, or always.",
+  "version": "2026.09.29.04",
+  "bugs": "https://github.com/drmogie/fga-foundry-modules/issues",
+  "authors": [
+    {
+      "name": "DrMogie"
+    }
+  ],
+  "compatibility": {
+    "minimum": "13",
+    "verified": "14"
+  },
+  "relationships": {
+    "systems": [
+      {
+        "id": "dnd5e",
+        "type": "system",
+        "compatibility": {
+          "minimum": "5.0.0"
+        }
+      }
+    ]
+  },
+  "esmodules": [
+    "scripts/main.mjs"
+  ],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    }
+  ],
+  "url": "https://github.com/drmogie/fga-foundry-modules/tree/main/modules/fga-auto-damage",
+  "manifest": "https://raw.githubusercontent.com/drmogie/fga-foundry-modules/main/modules/fga-auto-damage/module.json",
+  "download": "https://github.com/drmogie/fga-foundry-modules/releases/download/fga-auto-damage-2026.09.29.04/fga-auto-damage.zip"
+}

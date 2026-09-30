@@ -1,0 +1,191 @@
+<div class="fga-bd-root">
+
+  {{#if banner}}
+  <div class="fga-bd-banner {{banner.cls}}">
+    <i class="{{banner.icon}}"></i>
+    <span class="fga-bd-banner-text">{{banner.text}}</span>
+  </div>
+  {{/if}}
+
+  <div class="fga-bd-cols">
+
+    <section class="fga-bd-col">
+      <h3 class="fga-bd-col-head">
+        <span>Battlefields</span>
+        {{#if canBackToView}}
+        <button type="button" class="fga-bd-back-view" data-action="backToView" title="Go back to the board you were on before you clicked View">
+          <i class="fa-solid fa-house"></i> Back to my board
+        </button>
+        {{/if}}
+      </h3>
+
+      <div class="fga-bd-scroll">
+        {{#if noBattlefields}}
+        <p class="fga-bd-empty">No battlefields staged yet. Pick a scene below and click Stage.</p>
+        {{/if}}
+
+        <ul class="fga-bd-list">
+          {{#each battlefields}}
+          <li class="fga-bd-card {{#if selected}}selected{{/if}} {{#if isCurrent}}current{{/if}}" draggable="true" data-scene="{{id}}">
+            <div class="fga-bd-card-top">
+              <span class="fga-bd-drag-handle" title="Drag to reorder"><i class="fa-solid fa-grip-vertical"></i></span>
+              <label class="fga-bd-pick">
+                <input type="radio" name="battle" value="{{id}}" {{#if selected}}checked{{/if}} {{#if isCurrent}}disabled{{/if}}>
+                <img src="{{thumb}}" alt="">
+                <span class="fga-bd-name">{{name}}</span>
+              </label>
+            </div>
+            <div class="fga-bd-tags">
+              {{#if isCurrent}}<span class="tag here">You are here</span>{{/if}}
+              {{#if frozen}}<span class="tag frozen">No movement</span>{{/if}}
+              {{#if live}}<span class="tag live">Free movement</span>{{/if}}
+              {{#if hasStart}}<span class="tag ok">Start spot set</span>{{else}}<span class="tag warn">No start spot</span>{{/if}}
+            </div>
+            <div class="fga-bd-card-buttons">
+              <button type="button" data-action="viewScene" data-scene="{{id}}" title="Go to this scene"><i class="fa-solid fa-eye"></i> View</button>
+              <button type="button" data-action="setStart" data-scene="{{id}}" title="Click the map to set where the party starts"><i class="fa-solid fa-location-crosshairs"></i> Set start</button>
+              <button type="button" data-action="unstageScene" data-scene="{{id}}" title="Remove from this list"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+          </li>
+          {{/each}}
+        </ul>
+      </div>
+
+      <div class="fga-bd-stage-row">
+        <select name="stageScene">
+          {{#each available}}<option value="{{id}}">{{name}}</option>{{/each}}
+        </select>
+        <button type="button" data-action="stageScene"><i class="fa-solid fa-plus"></i> Stage</button>
+      </div>
+
+      <div class="fga-bd-maps">
+        <button type="button" data-action="makeFromImage" title="Pick one map image and make a battlefield from it"><i class="fa-solid fa-image"></i> Map from image</button>
+        <button type="button" data-action="importFolder" title="Make a battlefield from every map image in a folder"><i class="fa-solid fa-folder-open"></i> Import folder</button>
+        <button type="button" data-action="loadBundled" title="Load the images in the module's maps folder"><i class="fa-solid fa-box-open"></i> Bundled maps</button>
+      </div>
+    </section>
+
+    <section class="fga-bd-col">
+      <div class="fga-bd-tabs">
+        <button type="button" class="fga-bd-tab {{#if tabBattle}}active{{/if}}" data-action="setTab" data-tab="battle">
+          <i class="fa-solid fa-user"></i> Characters
+        </button>
+        <button type="button" class="fga-bd-tab {{#if tabGroups}}active{{/if}}" data-action="setTab" data-tab="groups">
+          <i class="fa-solid fa-people-group"></i> Groups
+        </button>
+      </div>
+
+      {{#if tabBattle}}
+      <h3>Characters on {{#if hasScene}}{{currentName}}{{else}}(no scene){{/if}}</h3>
+
+      <div class="fga-bd-quick">
+        <button type="button" data-action="selectAll">All</button>
+        <button type="button" data-action="selectPCs">Players only</button>
+        <button type="button" data-action="selectNone">None</button>
+        <span class="fga-bd-count">{{checkedCount}} chosen</span>
+      </div>
+
+      <div class="fga-bd-scroll">
+        <ul class="fga-bd-tokens">
+          {{#each tokens}}
+          <li class="fga-bd-token {{#if checked}}checked{{/if}}">
+            <label>
+              <input type="checkbox" data-token="{{id}}" {{#if checked}}checked{{/if}}>
+              <img src="{{img}}" alt="">
+              <span class="fga-bd-name">{{name}}</span>
+              {{#if isPC}}<span class="tag ok">PC</span>{{/if}}
+            </label>
+          </li>
+          {{/each}}
+        </ul>
+      </div>
+      {{/if}}
+
+      {{#if tabGroups}}
+      <h3>Groups on {{#if hasScene}}{{currentName}}{{else}}(no scene){{/if}}</h3>
+
+      <div class="fga-bd-quick">
+        <span class="fga-bd-count">{{groupCheckedCount}} chosen</span>
+      </div>
+
+      <div class="fga-bd-scroll">
+        {{#if noGroups}}
+        <p class="fga-bd-empty">No group tokens on this board. A Group actor (like a wagon or party icon) needs a token here first.</p>
+        {{/if}}
+        <ul class="fga-bd-tokens">
+          {{#each groups}}
+          <li class="fga-bd-token {{#if checked}}checked{{/if}}">
+            <label>
+              <input type="checkbox" data-group="{{id}}" {{#if checked}}checked{{/if}}>
+              <img src="{{img}}" alt="">
+              <span class="fga-bd-name">{{name}}</span>
+              <span class="tag ok">{{memberLabel}}</span>
+            </label>
+          </li>
+          {{/each}}
+        </ul>
+      </div>
+
+      <label class="fga-bd-check" title="Pop each party member out in a ring about 10 feet around where the group lands. Off just moves the group's own token.">
+        <input type="checkbox" name="extractGroup" {{#if extractGroup}}checked{{/if}}>
+        Extract members 10 ft around the group
+      </label>
+      <label class="fga-bd-check {{#unless extractGroup}}disabled{{/unless}}" title="Only applies with Extract checked: removes the group's own token once its members are out.">
+        <input type="checkbox" name="deleteGroup" {{#if deleteGroup}}checked{{/if}} {{#unless extractGroup}}disabled{{/unless}}>
+        Delete the group after extraction
+      </label>
+      {{/if}}
+    </section>
+
+  </div>
+
+  <div class="fga-bd-options">
+    {{#if tabBattle}}
+    <label class="fga-bd-field">
+      <span>Where do they land?</span>
+      <select name="placement">
+        {{#each placementOptions}}<option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}
+      </select>
+    </label>
+    <p class="fga-bd-hint">{{placementHint}}</p>
+    {{else}}
+    <p class="fga-bd-hint">Groups always land on the battlefield's start spot. Click Set start on it first.</p>
+    {{/if}}
+    <label class="fga-bd-field">
+      <span>Screen effect going in and out</span>
+      <select name="transition">
+        {{#each transitionOptions}}<option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}
+      </select>
+    </label>
+    <label class="fga-bd-check"><input type="checkbox" name="pull" {{#if pull}}checked{{/if}}> Pull the players to the new scene</label>
+  </div>
+
+  <footer class="fga-bd-footer">
+    {{#if tabBattle}}
+    <button type="button" class="fga-bd-big send" data-action="goHere" {{#unless canGoHere}}disabled{{/unless}} title="Move the checked characters to the picked battlefield. No movement there until you click Start Battle.">
+      <i class="fa-solid fa-person-walking-arrow-right"></i> Go here
+    </button>
+    <button type="button" class="fga-bd-big go-start" data-action="goHereStart" {{#unless canGoHere}}disabled{{/unless}} title="Move the checked characters to the picked battlefield and start the fight right away">
+      <i class="fa-solid fa-bolt"></i> Go here and start battle
+    </button>
+    <button type="button" class="fga-bd-big start" data-action="startBattle" {{#unless hasScene}}disabled{{/unless}} title="Start a fight with the checked characters right where you are">
+      <i class="fa-solid fa-play"></i> Start Battle
+    </button>
+    {{else}}
+    <button type="button" class="fga-bd-big send" data-action="sendGroup" {{#unless canGoHere}}disabled{{/unless}} title="Land the checked group(s) on the picked battlefield's start spot">
+      <i class="fa-solid fa-people-group"></i> Send group here
+    </button>
+    {{/if}}
+    {{#if canStop}}
+    <button type="button" class="fga-bd-big stop" data-action="stopBattle" title="Turn movement back on and clear the combat, but leave everyone standing where they are">
+      <i class="fa-solid fa-hand"></i> Stop Battle
+    </button>
+    {{/if}}
+    {{#if canReturn}}
+    <button type="button" class="fga-bd-big back" data-action="returnBoard" title="Send everyone back to where they came from and end this combat">
+      <i class="fa-solid fa-rotate-left"></i> Return to previous board
+    </button>
+    {{/if}}
+  </footer>
+
+</div>

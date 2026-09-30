@@ -1,0 +1,36 @@
+<div class="ccp-settings-body">
+  <p class="hint">Pick a condition's own icon to pop a character's portrait up the instant that condition is applied to them — never when it's removed. Classify each condition below as a Buff or a Debuff (or leave it Off to never show it, no matter what), then use the two switches to turn each whole category on or off.</p>
+
+  <div class="form-group">
+    <label><input type="checkbox" name="buffsEnabled" {{#if buffsEnabled}}checked{{/if}}> Show buffs when applied</label>
+    <label><input type="checkbox" name="debuffsEnabled" {{#if debuffsEnabled}}checked{{/if}}> Show debuffs when applied</label>
+  </div>
+
+  <div class="form-group">
+    <label>Icon Size: <span id="ccp-status-scale-output">{{iconScale}}x</span></label>
+    <input type="range" id="ccp-status-scale-range" name="iconScale" min="0.5" max="3" step="0.1" value="{{iconScale}}">
+    <p class="hint">Applies to every condition's icon, wherever it's shown centered on a popup.</p>
+  </div>
+
+  <hr>
+
+  <div class="form-group">
+    <label>Conditions ({{conditionCount}})</label>
+  </div>
+
+  <div class="ccp-status-list">
+    {{#each conditions}}
+    <div class="ccp-status-row">
+      <img class="ccp-status-icon" src="{{img}}" alt="{{name}}" title="{{name}}">
+      <span class="ccp-status-name">{{name}}</span>
+      <label class="ccp-status-radio"><input type="radio" name="classification-{{id}}" value="buff" {{#if isBuff}}checked{{/if}}> Buff</label>
+      <label class="ccp-status-radio"><input type="radio" name="classification-{{id}}" value="debuff" {{#if isDebuff}}checked{{/if}}> Debuff</label>
+      <label class="ccp-status-radio"><input type="radio" name="classification-{{id}}" value="off" {{#if isOff}}checked{{/if}}> Off</label>
+    </div>
+    {{/each}}
+  </div>
+
+  <footer class="form-footer">
+    <button type="submit"><i class="fa-solid fa-save"></i> Save</button>
+  </footer>
+</div>

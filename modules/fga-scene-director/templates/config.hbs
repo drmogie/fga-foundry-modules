@@ -1,0 +1,163 @@
+<div class="fga-sd-config-root">
+
+  <nav class="fga-sd-config-tabs">
+    <button type="button" class="fga-sd-config-tab-btn {{#if (eq activeTab "caption")}}active{{/if}}" data-action="switchConfigTab" data-tab="caption">
+      <i class="fa-solid fa-closed-captioning"></i> {{localize "FGA_SCENE_DIRECTOR.Config.CaptionSection"}}
+    </button>
+    <button type="button" class="fga-sd-config-tab-btn {{#if (eq activeTab "bubble")}}active{{/if}}" data-action="switchConfigTab" data-tab="bubble">
+      <i class="fa-solid fa-comment"></i> {{localize "FGA_SCENE_DIRECTOR.Config.BubbleSection"}}
+    </button>
+    <button type="button" class="fga-sd-config-tab-btn {{#if (eq activeTab "general")}}active{{/if}}" data-action="switchConfigTab" data-tab="general">
+      <i class="fa-solid fa-sliders"></i> {{localize "FGA_SCENE_DIRECTOR.Config.GeneralSection"}}
+    </button>
+  </nav>
+
+  <fieldset class="fga-sd-config-section fga-sd-config-tab-panel {{#if (eq activeTab "caption")}}active{{/if}}" data-tab-panel="caption">
+    <legend>{{localize "FGA_SCENE_DIRECTOR.Config.CaptionSection"}}</legend>
+
+    <div class="fga-sd-caption-preview-wrap">
+      <div id="fga-sd-caption-preview" class="fga-sd-caption-preview">{{previewText}}</div>
+    </div>
+
+    <div class="fga-sd-config-row">
+      <button type="button" class="fga-sd-onscreen-toggle" data-action="toggleOnScreenPreview">
+        <i class="fa-solid fa-eye"></i> {{localize "FGA_SCENE_DIRECTOR.Config.ShowOnScreen"}}
+      </button>
+      <span class="fga-sd-onscreen-hint">{{localize "FGA_SCENE_DIRECTOR.Config.OnScreenHint"}}</span>
+    </div>
+
+    <div class="fga-sd-config-row">
+      <label>{{localize "FGA_SCENE_DIRECTOR.Config.BgColor"}}
+        <input type="color" name="bgColorHex" value="{{bgColorHex}}" data-action="update" />
+      </label>
+      <label>{{localize "FGA_SCENE_DIRECTOR.Config.Opacity"}}
+        <input type="range" min="0" max="100" name="bgOpacity" value="{{bgOpacityPct}}" data-action="update" />
+        <span class="fga-sd-opacity-readout">{{bgOpacityPct}}%</span>
+      </label>
+    </div>
+
+    <div class="fga-sd-config-row">
+      <label>{{localize "FGA_SCENE_DIRECTOR.Config.Location"}}
+        <select name="location" data-action="update">
+          <option value="top" {{#if (eq location "top")}}selected{{/if}}>Top</option>
+          <option value="center" {{#if (eq location "center")}}selected{{/if}}>Center</option>
+          <option value="bottom" {{#if (eq location "bottom")}}selected{{/if}}>Bottom</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="fga-sd-config-row">
+      <label>{{localize "FGA_SCENE_DIRECTOR.Config.OffsetX"}}
+        <input type="number" step="1" name="offsetX" value="{{offsetX}}" data-action="update" />
+      </label>
+      <label>{{localize "FGA_SCENE_DIRECTOR.Config.OffsetY"}}
+        <input type="number" step="1" name="offsetY" value="{{offsetY}}" data-action="update" />
+      </label>
+      <button type="button" data-action="resetOffset">{{localize "FGA_SCENE_DIRECTOR.Config.ResetOffset"}}</button>
+    </div>
+  </fieldset>
+
+  <fieldset class="fga-sd-config-section fga-sd-config-tab-panel {{#if (eq activeTab "bubble")}}active{{/if}}" data-tab-panel="bubble">
+    <legend>{{localize "FGA_SCENE_DIRECTOR.Config.BubbleSection"}}</legend>
+
+    <div class="fga-sd-config-row">
+      <button type="button" class="fga-sd-onscreen-toggle" data-action="toggleBubblePreview">
+        <i class="fa-solid fa-eye"></i> {{localize "FGA_SCENE_DIRECTOR.Config.ShowOnScreen"}}
+      </button>
+      <span class="fga-sd-onscreen-hint">{{localize "FGA_SCENE_DIRECTOR.Config.BubbleOnScreenHint"}}</span>
+    </div>
+
+    <div class="fga-sd-config-row">
+      <label>{{localize "FGA_SCENE_DIRECTOR.Config.BubbleWidth"}}
+        <input type="number" min="200" step="10" name="bubbleWidthPx" value="{{bubbleWidthPx}}" data-action="update" />
+      </label>
+      <label>{{localize "FGA_SCENE_DIRECTOR.Config.BubbleHeight"}}
+        <input type="number" min="60" step="10" name="bubbleHeightPx" value="{{bubbleHeightPx}}" data-action="update" />
+      </label>
+    </div>
+  </fieldset>
+
+  <fieldset class="fga-sd-config-section fga-sd-config-tab-panel {{#if (eq activeTab "general")}}active{{/if}}" data-tab-panel="general">
+    <legend>{{localize "FGA_SCENE_DIRECTOR.Config.GeneralSection"}}</legend>
+
+    <label class="fga-sd-checkbox-row" title="{{localize 'FGA_SCENE_DIRECTOR.Settings.HideFloatingButton.Hint'}}">
+      <input type="checkbox" name="floatingButtonHidden" {{#if floatingButtonHidden}}checked{{/if}} data-action="update" />
+      {{localize "FGA_SCENE_DIRECTOR.Settings.HideFloatingButton.Name"}}
+    </label>
+
+    <label class="fga-sd-checkbox-row">
+      <input type="checkbox" name="editorToolsDefaultVisible" {{#if editorToolsDefaultVisible}}checked{{/if}} data-action="update" />
+      {{localize "FGA_SCENE_DIRECTOR.Settings.EditorToolsDefaultVisible.Name"}}
+    </label>
+
+    <label class="fga-sd-checkbox-row">
+      <input type="checkbox" name="keyboardNudgeEnabled" {{#if keyboardNudgeEnabled}}checked{{/if}} data-action="update" />
+      {{localize "FGA_SCENE_DIRECTOR.Settings.KeyboardNudgeEnabled.Name"}}
+    </label>
+
+    <label class="fga-sd-config-row">
+      {{localize "FGA_SCENE_DIRECTOR.Settings.DefaultLineVisibility.Name"}}
+      <select name="defaultLineVisibility" data-action="update">
+        <option value="public" {{#if (eq defaultLineVisibility "public")}}selected{{/if}}>{{localize "FGA_SCENE_DIRECTOR.Settings.DefaultLineVisibility.Public"}}</option>
+        <option value="private" {{#if (eq defaultLineVisibility "private")}}selected{{/if}}>{{localize "FGA_SCENE_DIRECTOR.Settings.DefaultLineVisibility.Private"}}</option>
+      </select>
+    </label>
+
+    <label class="fga-sd-checkbox-row" title="{{localize 'FGA_SCENE_DIRECTOR.Settings.TransitionEnabled.Hint'}}">
+      <input type="checkbox" name="transitionEnabled" {{#if transitionEnabled}}checked{{/if}} data-action="update" />
+      {{localize "FGA_SCENE_DIRECTOR.Settings.TransitionEnabled.Name"}}
+    </label>
+
+    <label class="fga-sd-config-row" title="{{localize 'FGA_SCENE_DIRECTOR.Settings.TransitionType.Hint'}}">
+      {{localize "FGA_SCENE_DIRECTOR.Settings.TransitionType.Name"}}
+      <select name="transitionType" data-action="update">
+        <option value="slide" {{#if (eq transitionType "slide")}}selected{{/if}}>{{localize "FGA_SCENE_DIRECTOR.Settings.TransitionType.Slide"}}</option>
+        <option value="fade" {{#if (eq transitionType "fade")}}selected{{/if}}>{{localize "FGA_SCENE_DIRECTOR.Settings.TransitionType.FadeMovement"}}</option>
+        <option value="teleport" {{#if (eq transitionType "teleport")}}selected{{/if}}>{{localize "FGA_SCENE_DIRECTOR.Settings.TransitionType.TeleportMovement"}}</option>
+      </select>
+    </label>
+
+    <label class="fga-sd-config-row" title="{{localize 'FGA_SCENE_DIRECTOR.Settings.AutoDelayOrder.Hint'}}">
+      {{localize "FGA_SCENE_DIRECTOR.Settings.AutoDelayOrder.Name"}}
+      <select name="autoDelayOrder" data-action="update">
+        <option value="actionThenTimer" {{#if (eq autoDelayOrder "actionThenTimer")}}selected{{/if}}>{{localize "FGA_SCENE_DIRECTOR.Settings.AutoDelayOrder.ActionThenTimer"}}</option>
+        <option value="timerThenAction" {{#if (eq autoDelayOrder "timerThenAction")}}selected{{/if}}>{{localize "FGA_SCENE_DIRECTOR.Settings.AutoDelayOrder.TimerThenAction"}}</option>
+      </select>
+    </label>
+
+    <h4 class="fga-sd-config-subheading" title="{{localize 'FGA_SCENE_DIRECTOR.Settings.DefaultImageSource.Hint'}}">{{localize "FGA_SCENE_DIRECTOR.Settings.DefaultImageSource.SectionTitle"}}</h4>
+
+    <label class="fga-sd-config-row">
+      {{localize "FGA_SCENE_DIRECTOR.Settings.DefaultImageSource.Player"}}
+      <select name="defaultImageSourcePlayer" data-action="update">
+        <option value="profile" {{#if (eq defaultImageSourcePlayer "profile")}}selected{{/if}}>{{localize "FGA_SCENE_DIRECTOR.Settings.DefaultImageSource.Profile"}}</option>
+        <option value="token" {{#if (eq defaultImageSourcePlayer "token")}}selected{{/if}}>{{localize "FGA_SCENE_DIRECTOR.Settings.DefaultImageSource.Token"}}</option>
+      </select>
+    </label>
+
+    <label class="fga-sd-config-row">
+      {{localize "FGA_SCENE_DIRECTOR.Settings.DefaultImageSource.Hostile"}}
+      <select name="defaultImageSourceHostile" data-action="update">
+        <option value="profile" {{#if (eq defaultImageSourceHostile "profile")}}selected{{/if}}>{{localize "FGA_SCENE_DIRECTOR.Settings.DefaultImageSource.Profile"}}</option>
+        <option value="token" {{#if (eq defaultImageSourceHostile "token")}}selected{{/if}}>{{localize "FGA_SCENE_DIRECTOR.Settings.DefaultImageSource.Token"}}</option>
+      </select>
+    </label>
+
+    <label class="fga-sd-config-row">
+      {{localize "FGA_SCENE_DIRECTOR.Settings.DefaultImageSource.Neutral"}}
+      <select name="defaultImageSourceNeutral" data-action="update">
+        <option value="profile" {{#if (eq defaultImageSourceNeutral "profile")}}selected{{/if}}>{{localize "FGA_SCENE_DIRECTOR.Settings.DefaultImageSource.Profile"}}</option>
+        <option value="token" {{#if (eq defaultImageSourceNeutral "token")}}selected{{/if}}>{{localize "FGA_SCENE_DIRECTOR.Settings.DefaultImageSource.Token"}}</option>
+      </select>
+    </label>
+
+    <label class="fga-sd-config-row">
+      {{localize "FGA_SCENE_DIRECTOR.Settings.DefaultImageSource.Friendly"}}
+      <select name="defaultImageSourceFriendly" data-action="update">
+        <option value="profile" {{#if (eq defaultImageSourceFriendly "profile")}}selected{{/if}}>{{localize "FGA_SCENE_DIRECTOR.Settings.DefaultImageSource.Profile"}}</option>
+        <option value="token" {{#if (eq defaultImageSourceFriendly "token")}}selected{{/if}}>{{localize "FGA_SCENE_DIRECTOR.Settings.DefaultImageSource.Token"}}</option>
+      </select>
+    </label>
+  </fieldset>
+
+</div>

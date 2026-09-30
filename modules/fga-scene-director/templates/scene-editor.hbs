@@ -1,0 +1,660 @@
+<div class="fga-sd-editor-root">
+
+  <section class="fga-sd-left-panel">
+    <button type="button" class="fga-sd-new-scene" data-action="newScene">
+      <i class="fa-solid fa-plus"></i> {{localize "FGA_SCENE_DIRECTOR.SceneEditor.NewScene"}}
+    </button>
+    <ul class="fga-sd-scene-list">
+      {{#each scenes as |scene|}}
+      <li class="fga-sd-scene-item {{#if scene.active}}active{{/if}}" data-scene-id="{{scene.id}}" data-action="selectScene">
+        {{#if scene.locked}}<i class="fa-solid fa-lock fga-sd-scene-item-lock-icon" title="{{localize 'FGA_SCENE_DIRECTOR.SceneEditor.SceneLockedTag'}}"></i>{{/if}}
+        <span class="fga-sd-scene-item-name">{{scene.name}}</span>
+        {{#unless scene.locked}}
+        <button type="button" class="fga-sd-scene-item-delete" data-action="deleteScene" title="{{localize 'FGA_SCENE_DIRECTOR.SceneEditor.DeleteScene'}}">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+        {{/unless}}
+      </li>
+      {{/each}}
+    </ul>
+  </section>
+
+  <section class="fga-sd-right-panel {{#if activeScene.locked}}fga-sd-locked{{/if}}">
+
+    {{#if activeScene}}
+    <header class="fga-sd-right-header">
+      <button type="button" class="fga-sd-editor-tools-toggle {{#if editorToolsVisible}}on{{/if}}"
+              data-action="toggleEditorTools" title="{{localize 'FGA_SCENE_DIRECTOR.SceneEditor.EditorToolsToggle'}}">
+        <i class="fa-solid fa-arrows-up-down-left-right"></i>
+      </button>
+      <button type="button" class="fga-sd-show-all" data-action="showAllCharacters" title="{{localize 'FGA_SCENE_DIRECTOR.SceneEditor.ShowAllCharacters'}}">
+        <i class="fa-solid fa-people-group"></i>
+      </button>
+      <input type="text" class="fga-sd-scene-name" name="sceneName" value="{{activeScene.name}}"
+             data-action="renameScene" placeholder="{{localize 'FGA_SCENE_DIRECTOR.SceneEditor.SceneName'}}" {{#if activeScene.locked}}readonly{{/if}} />
+      {{#if activeScene.locked}}
+      <button type="button" class="fga-sd-lock-scene on" data-action="toggleLockScene"
+              title="{{localize 'FGA_SCENE_DIRECTOR.SceneEditor.UnlockSceneHint'}}">
+        <i class="fa-solid fa-lock"></i> {{localize "FGA_SCENE_DIRECTOR.SceneEditor.Unlock"}}
+      </button>
+      {{else}}
+      <button type="button" class="fga-sd-lock-scene" data-action="toggleLockScene"
+              title="{{localize 'FGA_SCENE_DIRECTOR.SceneEditor.LockSceneHint'}}">
+        <i class="fa-solid fa-lock-open"></i> {{localize "FGA_SCENE_DIRECTOR.SceneEditor.Lock"}}
+      </button>
+      {{/if}}
+      <button type="button" class="fga-sd-auto-play {{#if autoActive}}active{{/if}}" data-action="toggleAutoPlay"
+              title="{{localize 'FGA_SCENE_DIRECTOR.SceneEditor.AutoPlayHint'}}">
+        <i class="fa-solid {{#if autoActive}}fa-stop{{else}}fa-play{{/if}}"></i>
+        {{#if autoActive}}{{localize "FGA_SCENE_DIRECTOR.SceneEditor.AutoPlayStop"}}{{else}}{{localize "FGA_SCENE_DIRECTOR.SceneEditor.AutoPlay"}}{{/if}}
+      </button>
+      <button type="button" class="fga-sd-next" data-action="nextSection" {{#if autoActive}}disabled{{/if}}>
+        <i class="fa-solid fa-forward-step"></i> {{localize "FGA_SCENE_DIRECTOR.SceneEditor.Next"}}
+      </button>
+    </header>
+
+    {{#if activeScene.locked}}
+    <div class="fga-sd-locked-banner">
+      <i class="fa-solid fa-lock"></i>
+      <span>{{localize "FGA_SCENE_DIRECTOR.SceneEditor.SceneLockedBanner"}}</span>
+    </div>
+    {{/if}}
+
+    {{#if autoPaused}}
+    <div class="fga-sd-auto-pause-banner">
+      <i class="fa-solid fa-circle-pause"></i>
+      <span>{{localize "FGA_SCENE_DIRECTOR.SceneEditor.AutoPausedBanner"}}</span>
+      <button type="button" class="fga-sd-auto-continue" data-action="autoContinue">
+        <i class="fa-solid fa-play"></i> {{localize "FGA_SCENE_DIRECTOR.SceneEditor.AutoContinue"}}
+      </button>
+    </div>
+    {{/if}}
+
+    <ol class="fga-sd-timeline" data-drop-target="timeline">
+      {{#each activeScene.sections as |section|}}
+      <li class="fga-sd-section fga-sd-section-{{section.type}} {{#if section.isNextUp}}next-up{{/if}}"
+          data-section-id="{{section.id}}" data-index="{{section.index}}" draggable="true">
+
+        <div class="fga-sd-section-drag-handle"><i class="fa-solid fa-grip-lines"></i></div>
+
+        {{#if (eq section.type "character")}}
+        <div class="fga-sd-section-body">
+          <div class="fga-sd-section-row">
+            <i class="fa-solid fa-fw fa-user-plus"></i>
+            {{#if section.collapsed}}
+            <span class="fga-sd-section-summary-text">{{section.summary}}</span>
+            {{else}}
+            <select class="fga-sd-character-select" data-action="setSectionActor" data-select-role="replace">
+              <option value="">{{localize "FGA_SCENE_DIRECTOR.SceneEditor.SelectCharacter"}}</option>
+              {{#each ../actors as |a|}}
+              <option value="{{a.value}}" {{#if (eq a.value section.subjectKey)}}selected{{/if}}>{{a.name}}</option>
+              {{/each}}
+              {{#each ../characterGroups as |g|}}
+              <optgroup label="{{g.name}}">
+                {{#each g.members as |m|}}
+                <option value="{{m.value}}" {{#if (eq m.value section.subjectKey)}}selected{{/if}}>{{m.label}}</option>
+                {{/each}}
+              </optgroup>
+              {{/each}}
+            </select>
+            {{/if}}
+            <div class="fga-sd-section-actions">
+              {{#if section.isGroupActor}}
+              <button type="button" class="fga-sd-expand-group" data-action="expandGroup" title="{{localize 'FGA_SCENE_DIRECTOR.SceneEditor.ExpandGroupHint'}}">
+                <i class="fa-solid fa-people-group"></i> {{localize "FGA_SCENE_DIRECTOR.SceneEditor.ExpandGroup"}}
+              </button>
+              {{/if}}
+              <i class="fa-solid fa-clock fga-sd-auto-delay-icon" title="{{localize 'FGA_SCENE_DIRECTOR.SceneEditor.AutoDelayHint'}}"></i>
+              <input type="number" class="fga-sd-auto-delay" min="0" step="250" value="{{section.autoDelayMs}}"
+                     data-action="setAutoDelayMs" title="{{localize 'FGA_SCENE_DIRECTOR.SceneEditor.AutoDelayHint'}}" />
+              <button type="button" class="fga-sd-fire-now" data-action="fireSection" title="{{localize 'FGA_SCENE_DIRECTOR.SceneEditor.FireNow'}}" {{#if autoActive}}disabled{{/if}}>
+                <i class="fa-solid fa-play"></i>
+              </button>
+              <button type="button" class="fga-sd-collapse-toggle" data-action="toggleCollapse">
+                <i class="fa-solid {{#if section.collapsed}}fa-chevron-down{{else}}fa-chevron-up{{/if}}"></i>
+              </button>
+            </div>
+          </div>
+          {{#unless section.collapsed}}
+          <div class="fga-sd-section-details fga-sd-section-details-grouped">
+
+            <div class="fga-sd-subsection">
+              <div class="fga-sd-subsection-title">{{localize "FGA_SCENE_DIRECTOR.SceneEditor.SubsectionAppearance"}}</div>
+              <div class="fga-sd-subsection-row">
+                <label title="{{#if section.isLooseActor}}{{localize 'FGA_SCENE_DIRECTOR.SceneEditor.ImageSourceLooseHint'}}{{else}}{{localize 'FGA_SCENE_DIRECTOR.SceneEditor.ImageSourceHint'}}{{/if}}">{{localize "FGA_SCENE_DIRECTOR.SceneEditor.ImageSource"}}
+                  <select data-action="setImageSource" {{#if section.isLooseActor}}disabled{{/if}}>
+                    <option value="profile" {{#if (eq section.imageSource "profile")}}selected{{/if}}>{{localize "FGA_SCENE_DIRECTOR.SceneEditor.ImageSourceProfile"}}</option>
+                    {{#unless section.isLooseActor}}
+                    <option value="token" {{#if (eq section.imageSource "token")}}selected{{/if}}>{{localize "FGA_SCENE_DIRECTOR.SceneEditor.ImageSourceToken"}}</option>
+                    {{/unless}}
+                  </select>
+                </label>
+                <label class="fga-sd-scale-field">{{localize "FGA_SCENE_DIRECTOR.SceneEditor.Scale"}}
+                  <input type="range" min="0.25" max="3" step="0.05" value="{{section.scale}}" data-action="setScale" data-fga-scale-pair="range" />
+                  <input type="number" min="0.25" max="3" step="0.05" value="{{section.scale}}" class="fga-sd-scale-number" data-action="setScale" data-fga-scale-pair="number" />
+                </label>
+              </div>
+            </div>
+
+            <div class="fga-sd-subsection">
+              <div class="fga-sd-subsection-title">{{localize "FGA_SCENE_DIRECTOR.SceneEditor.SubsectionMovement"}}</div>
+              <div class="fga-sd-subsection-row">
+                <label class="fga-sd-checkbox">
+                  <input type="checkbox" {{#if section.flipH}}checked{{/if}} data-action="toggleFlipH" /> {{localize "FGA_SCENE_DIRECTOR.SceneEditor.FlipH"}}
+                </label>
+                <label class="fga-sd-checkbox">
+                  <input type="checkbox" {{#if section.flipV}}checked{{/if}} data-action="toggleFlipV" /> {{localize "FGA_SCENE_DIRECTOR.SceneEditor.FlipV"}}
+                </label>
+                <label>{{localize "FGA_SCENE_DIRECTOR.SceneEditor.Rotation"}}
+                  <input type="number" step="1" value="{{section.rotation}}" data-action="setRotation" />
+                </label>
+                <label class="fga-sd-checkbox" title="{{localize 'FGA_SCENE_DIRECTOR.SceneEditor.TransitionEnabledHint'}}">
+                  <input type="checkbox" {{#if section.transitionEnabled}}checked{{/if}} data-action="toggleTransitionEnabled" /> {{localize "FGA_SCENE_DIRECTOR.SceneEditor.TransitionEnabled"}}
+                </label>
+                <label>{{localize "FGA_SCENE_DIRECTOR.SceneEditor.TransitionType"}}
+                  <select data-action="setTransitionType" {{#unless section.transitionEnabled}}disabled{{/unless}}>
+                    <option value="slide" {{#if (eq section.transitionType "slide")}}selected{{/if}}>{{localize "FGA_SCENE_DIRECTOR.Settings.TransitionType.Slide"}}</option>
+                    <option value="fade" {{#if (eq section.transitionType "fade")}}selected{{/if}}>{{localize "FGA_SCENE_DIRECTOR.Settings.TransitionType.FadeMovement"}}</option>
+                    <option value="teleport" {{#if (eq section.transitionType "teleport")}}selected{{/if}}>{{localize "FGA_SCENE_DIRECTOR.Settings.TransitionType.TeleportMovement"}}</option>
+                  </select>
+                </label>
+                <label title="{{localize 'FGA_SCENE_DIRECTOR.SceneEditor.TransitionMsHint'}}">{{localize "FGA_SCENE_DIRECTOR.SceneEditor.TransitionMs"}}
+                  <input type="number" min="0" step="50" value="{{section.transitionMs}}" data-action="setTransitionMs" {{#unless section.transitionEnabled}}disabled{{/unless}} />
+                </label>
+              </div>
+            </div>
+
+            <div class="fga-sd-subsection">
+              <div class="fga-sd-subsection-title">{{localize "FGA_SCENE_DIRECTOR.SceneEditor.SubsectionTiming"}}</div>
+              <div class="fga-sd-subsection-row">
+                <label>{{localize "FGA_SCENE_DIRECTOR.SceneEditor.FadeIn"}}
+                  <input type="number" min="0" step="50" value="{{section.fadeInMs}}" data-action="setFadeIn" />
+                </label>
+              </div>
+            </div>
+
+            <div class="fga-sd-subsection">
+              <div class="fga-sd-subsection-title">{{localize "FGA_SCENE_DIRECTOR.SceneEditor.SubsectionObscureReveal"}}</div>
+              <div class="fga-sd-subsection-row">
+                <label>{{localize "FGA_SCENE_DIRECTOR.SceneEditor.ObscureStyle"}}
+                  <select data-action="setObscureStyle">
+                    <option value="none" {{#if (eq section.obscureStyle "none")}}selected{{/if}}>{{localize "FGA_SCENE_DIRECTOR.SceneEditor.None"}}</option>
+                    <option value="blur" {{#if (eq section.obscureStyle "blur")}}selected{{/if}}>{{localize "FGA_SCENE_DIRECTOR.SceneEditor.Blur"}}</option>
+                    <option value="shadow" {{#if (eq section.obscureStyle "shadow")}}selected{{/if}}>{{localize "FGA_SCENE_DIRECTOR.SceneEditor.Shadow"}}</option>
+                    <option value="fadeIn" {{#if (eq section.obscureStyle "fadeIn")}}selected{{/if}}>{{localize "FGA_SCENE_DIRECTOR.SceneEditor.FadeIn"}}</option>
+                    <option value="fadeOut" {{#if (eq section.obscureStyle "fadeOut")}}selected{{/if}}>{{localize "FGA_SCENE_DIRECTOR.SceneEditor.FadeOut"}}</option>
+                    <option value="teleportIn" {{#if (eq section.obscureStyle "teleportIn")}}selected{{/if}}>{{localize "FGA_SCENE_DIRECTOR.SceneEditor.TeleportIn"}}</option>
+                    <option value="teleportOut" {{#if (eq section.obscureStyle "teleportOut")}}selected{{/if}}>{{localize "FGA_SCENE_DIRECTOR.SceneEditor.TeleportOut"}}</option>
+                  </select>
+                </label>
+                <label>{{localize "FGA_SCENE_DIRECTOR.SceneEditor.BlurAmount"}}
+                  <input type="number" min="0" max="40" step="1" value="{{section.obscureBlurAmount}}" data-action="setObscureBlurAmount" />
+                </label>
+                <label title="{{localize 'FGA_SCENE_DIRECTOR.SceneEditor.ObscureDurationHint'}}">{{localize "FGA_SCENE_DIRECTOR.SceneEditor.ObscureDuration"}}
+                  <input type="number" min="0" step="50" value="{{section.obscureDurationMs}}" data-action="setObscureDuration" />
+                </label>
+              </div>
+            </div>
+
+            <div class="fga-sd-subsection">
+              <div class="fga-sd-subsection-title">{{localize "FGA_SCENE_DIRECTOR.SceneEditor.SubsectionPosition"}}</div>
+              <div class="fga-sd-quick-position">
+                <span>{{localize "FGA_SCENE_DIRECTOR.SceneEditor.Position"}}</span>
+                <button type="button" class="{{#if (eq section.activeQuickPosition 'left')}}active{{/if}}" data-action="setQuickPosition" data-pos="left">{{localize "FGA_SCENE_DIRECTOR.SceneEditor.Left"}}</button>
+                <button type="button" class="{{#if (eq section.activeQuickPosition 'center')}}active{{/if}}" data-action="setQuickPosition" data-pos="center">{{localize "FGA_SCENE_DIRECTOR.SceneEditor.Center"}}</button>
+                <button type="button" class="{{#if (eq section.activeQuickPosition 'right')}}active{{/if}}" data-action="setQuickPosition" data-pos="right">{{localize "FGA_SCENE_DIRECTOR.SceneEditor.Right"}}</button>
+              </div>
+              <div class="fga-sd-locks" title="{{localize 'FGA_SCENE_DIRECTOR.SceneEditor.PositionLockHint'}}">
+                <span>{{localize "FGA_SCENE_DIRECTOR.SceneEditor.PositionLocks"}}</span>
+                {{#each section.locks as |lock|}}
+                <button type="button"
+                  class="fga-sd-lock-btn {{#if lock.active}}active{{else if lock.hasData}}saved{{/if}}"
+                  data-action="setLock" data-lock-index="{{lock.index}}" {{#if lock.disabled}}disabled{{/if}}>{{lock.number}}</button>
+                {{/each}}
+                <button type="button" class="fga-sd-lock-clear-btn" data-action="clearActiveLock"
+                  {{#unless section.hasActiveLock}}disabled{{/unless}}
+                  title="{{localize 'FGA_SCENE_DIRECTOR.SceneEditor.PositionLockClearHint'}}">
+                  <i class="fa-solid fa-xmark"></i>
+                </button>
+              </div>
+            </div>
+
+          </div>
+          {{/unless}}
+        </div>
+        {{/if}}
+
+        {{#if (eq section.type "characterControl")}}
+        <div class="fga-sd-section-body">
+          <div class="fga-sd-section-row">
+            <i class="fa-solid fa-fw fa-sliders"></i>
+            {{#if section.collapsed}}
+            <span class="fga-sd-section-summary-text">{{section.summary}}</span>
+            {{/if}}
+            <div class="fga-sd-section-actions">
+              <i class="fa-solid fa-clock fga-sd-auto-delay-icon" title="{{localize 'FGA_SCENE_DIRECTOR.SceneEditor.AutoDelayHint'}}"></i>
+              <input type="number" class="fga-sd-auto-delay" min="0" step="250" value="{{section.autoDelayMs}}"
+                     data-action="setAutoDelayMs" title="{{localize 'FGA_SCENE_DIRECTOR.SceneEditor.AutoDelayHint'}}" />
+              <button type="button" class="fga-sd-fire-now" data-action="fireSection" title="{{localize 'FGA_SCENE_DIRECTOR.SceneEditor.FireNow'}}" {{#if autoActive}}disabled{{/if}}>
+                <i class="fa-solid fa-play"></i>
+              </button>
+              <button type="button" class="fga-sd-collapse-toggle" data-action="toggleCollapse">
+                <i class="fa-solid {{#if section.collapsed}}fa-chevron-down{{else}}fa-chevron-up{{/if}}"></i>
+              </button>
+            </div>
+          </div>
+          {{#unless section.collapsed}}
+          <div class="fga-sd-section-details fga-sd-section-details-grouped">
+
+            <div class="fga-sd-subsection">
+              <div class="fga-sd-subsection-title">{{localize "FGA_SCENE_DIRECTOR.SceneEditor.SelectCharacter"}}</div>
+              <div class="fga-sd-cc-character-checks">
+                {{#each section.controlTargets as |a|}}
+                <label class="fga-sd-checkbox">
+                  <input type="checkbox" data-action="toggleCharacterControlActor" data-key="{{a.id}}"
+                    {{#if a.checked}}checked{{/if}} {{#if a.disabled}}disabled{{/if}} />
+                  {{a.name}}
+                </label>
+                {{else}}
+                <span class="fga-sd-clear-character-empty">{{localize "FGA_SCENE_DIRECTOR.SceneEditor.NoOnStageCharacters"}}</span>
+                {{/each}}
+              </div>
+            </div>
+
+            <div class="fga-sd-subsection">
+              <div class="fga-sd-subsection-title">{{localize "FGA_SCENE_DIRECTOR.SceneEditor.SubsectionAppearance"}}</div>
+              <div class="fga-sd-subsection-row">
+                <label title="{{#if section.isLooseActor}}{{localize 'FGA_SCENE_DIRECTOR.SceneEditor.ImageSourceLooseHint'}}{{else}}{{localize 'FGA_SCENE_DIRECTOR.SceneEditor.ImageSourceHint'}}{{/if}}">{{localize "FGA_SCENE_DIRECTOR.SceneEditor.ImageSource"}}
+                  <select data-action="setImageSource" {{#if section.isLooseActor}}disabled{{/if}}>
+                    <option value="profile" {{#if (eq section.imageSource "profile")}}selected{{/if}}>{{localize "FGA_SCENE_DIRECTOR.SceneEditor.ImageSourceProfile"}}</option>
+                    {{#unless section.isLooseActor}}
+                    <option value="token" {{#if (eq section.imageSource "token")}}selected{{/if}}>{{localize "FGA_SCENE_DIRECTOR.SceneEditor.ImageSourceToken"}}</option>
+                    {{/unless}}
+                  </select>
+                </label>
+                <label class="fga-sd-scale-field">{{localize "FGA_SCENE_DIRECTOR.SceneEditor.Scale"}}
+                  <input type="range" min="0.25" max="3" step="0.05" value="{{section.scale}}" data-action="setScale" data-fga-scale-pair="range" />
+                  <input type="number" min="0.25" max="3" step="0.05" value="{{section.scale}}" class="fga-sd-scale-number" data-action="setScale" data-fga-scale-pair="number" />
+                </label>
+              </div>
+            </div>
+
+            <div class="fga-sd-subsection">
+              <div class="fga-sd-subsection-title">{{localize "FGA_SCENE_DIRECTOR.SceneEditor.SubsectionMovement"}}</div>
+              <div class="fga-sd-subsection-row">
+                <label class="fga-sd-checkbox">
+                  <input type="checkbox" {{#if section.flipH}}checked{{/if}} data-action="toggleFlipH" /> {{localize "FGA_SCENE_DIRECTOR.SceneEditor.FlipH"}}
+                </label>
+                <label class="fga-sd-checkbox">
+                  <input type="checkbox" {{#if section.flipV}}checked{{/if}} data-action="toggleFlipV" /> {{localize "FGA_SCENE_DIRECTOR.SceneEditor.FlipV"}}
+                </label>
+                <label>{{localize "FGA_SCENE_DIRECTOR.SceneEditor.Rotation"}}
+                  <input type="number" step="1" value="{{section.rotation}}" data-action="setRotation" />
+                </label>
+                <label class="fga-sd-checkbox" title="{{localize 'FGA_SCENE_DIRECTOR.SceneEditor.TransitionEnabledHint'}}">
+                  <input type="checkbox" {{#if section.transitionEnabled}}checked{{/if}} data-action="toggleTransitionEnabled" /> {{localize "FGA_SCENE_DIRECTOR.SceneEditor.TransitionEnabled"}}
+                </label>
+                <label>{{localize "FGA_SCENE_DIRECTOR.SceneEditor.TransitionType"}}
+                  <select data-action="setTransitionType" {{#unless section.transitionEnabled}}disabled{{/unless}}>
+                    <option value="slide" {{#if (eq section.transitionType "slide")}}selected{{/if}}>{{localize "FGA_SCENE_DIRECTOR.Settings.TransitionType.Slide"}}</option>
+                    <option value="fade" {{#if (eq section.transitionType "fade")}}selected{{/if}}>{{localize "FGA_SCENE_DIRECTOR.Settings.TransitionType.FadeMovement"}}</option>
+                    <option value="teleport" {{#if (eq section.transitionType "teleport")}}selected{{/if}}>{{localize "FGA_SCENE_DIRECTOR.Settings.TransitionType.TeleportMovement"}}</option>
+                  </select>
+                </label>
+                <label title="{{localize 'FGA_SCENE_DIRECTOR.SceneEditor.TransitionMsHint'}}">{{localize "FGA_SCENE_DIRECTOR.SceneEditor.TransitionMs"}}
+                  <input type="number" min="0" step="50" value="{{section.transitionMs}}" data-action="setTransitionMs" {{#unless section.transitionEnabled}}disabled{{/unless}} />
+                </label>
+              </div>
+            </div>
+
+            <div class="fga-sd-subsection">
+              <div class="fga-sd-subsection-title">{{localize "FGA_SCENE_DIRECTOR.SceneEditor.SubsectionTiming"}}</div>
+              <div class="fga-sd-subsection-row">
+                <label>{{localize "FGA_SCENE_DIRECTOR.SceneEditor.FadeIn"}}
+                  <input type="number" min="0" step="50" value="{{section.fadeInMs}}" data-action="setFadeIn" />
+                </label>
+              </div>
+            </div>
+
+            <div class="fga-sd-subsection">
+              <div class="fga-sd-subsection-title">{{localize "FGA_SCENE_DIRECTOR.SceneEditor.SubsectionObscureReveal"}}</div>
+              <div class="fga-sd-subsection-row">
+                <label>{{localize "FGA_SCENE_DIRECTOR.SceneEditor.ObscureStyle"}}
+                  <select data-action="setObscureStyle">
+                    <option value="none" {{#if (eq section.obscureStyle "none")}}selected{{/if}}>{{localize "FGA_SCENE_DIRECTOR.SceneEditor.None"}}</option>
+                    <option value="blur" {{#if (eq section.obscureStyle "blur")}}selected{{/if}}>{{localize "FGA_SCENE_DIRECTOR.SceneEditor.Blur"}}</option>
+                    <option value="shadow" {{#if (eq section.obscureStyle "shadow")}}selected{{/if}}>{{localize "FGA_SCENE_DIRECTOR.SceneEditor.Shadow"}}</option>
+                    <option value="fadeIn" {{#if (eq section.obscureStyle "fadeIn")}}selected{{/if}}>{{localize "FGA_SCENE_DIRECTOR.SceneEditor.FadeIn"}}</option>
+                    <option value="fadeOut" {{#if (eq section.obscureStyle "fadeOut")}}selected{{/if}}>{{localize "FGA_SCENE_DIRECTOR.SceneEditor.FadeOut"}}</option>
+                    <option value="teleportIn" {{#if (eq section.obscureStyle "teleportIn")}}selected{{/if}}>{{localize "FGA_SCENE_DIRECTOR.SceneEditor.TeleportIn"}}</option>
+                    <option value="teleportOut" {{#if (eq section.obscureStyle "teleportOut")}}selected{{/if}}>{{localize "FGA_SCENE_DIRECTOR.SceneEditor.TeleportOut"}}</option>
+                  </select>
+                </label>
+                <label>{{localize "FGA_SCENE_DIRECTOR.SceneEditor.BlurAmount"}}
+                  <input type="number" min="0" max="40" step="1" value="{{section.obscureBlurAmount}}" data-action="setObscureBlurAmount" />
+                </label>
+                <label title="{{localize 'FGA_SCENE_DIRECTOR.SceneEditor.ObscureDurationHint'}}">{{localize "FGA_SCENE_DIRECTOR.SceneEditor.ObscureDuration"}}
+                  <input type="number" min="0" step="50" value="{{section.obscureDurationMs}}" data-action="setObscureDuration" />
+                </label>
+              </div>
+            </div>
+
+            <div class="fga-sd-subsection">
+              <div class="fga-sd-subsection-title">{{localize "FGA_SCENE_DIRECTOR.SceneEditor.SubsectionPosition"}}</div>
+              <div class="fga-sd-quick-position">
+                <span>{{localize "FGA_SCENE_DIRECTOR.SceneEditor.Position"}}</span>
+                <button type="button" class="{{#if (eq section.activeQuickPosition 'left')}}active{{/if}}" data-action="setQuickPosition" data-pos="left">{{localize "FGA_SCENE_DIRECTOR.SceneEditor.Left"}}</button>
+                <button type="button" class="{{#if (eq section.activeQuickPosition 'center')}}active{{/if}}" data-action="setQuickPosition" data-pos="center">{{localize "FGA_SCENE_DIRECTOR.SceneEditor.Center"}}</button>
+                <button type="button" class="{{#if (eq section.activeQuickPosition 'right')}}active{{/if}}" data-action="setQuickPosition" data-pos="right">{{localize "FGA_SCENE_DIRECTOR.SceneEditor.Right"}}</button>
+              </div>
+              <div class="fga-sd-locks" title="{{localize 'FGA_SCENE_DIRECTOR.SceneEditor.PositionLockHint'}}">
+                <span>{{localize "FGA_SCENE_DIRECTOR.SceneEditor.PositionLocks"}}</span>
+                {{#each section.locks as |lock|}}
+                <button type="button"
+                  class="fga-sd-lock-btn {{#if lock.active}}active{{else if lock.hasData}}saved{{/if}}"
+                  data-action="setLock" data-lock-index="{{lock.index}}" {{#if lock.disabled}}disabled{{/if}}>{{lock.number}}</button>
+                {{/each}}
+                <button type="button" class="fga-sd-lock-clear-btn" data-action="clearActiveLock"
+                  {{#unless section.hasActiveLock}}disabled{{/unless}}
+                  title="{{localize 'FGA_SCENE_DIRECTOR.SceneEditor.PositionLockClearHint'}}">
+                  <i class="fa-solid fa-xmark"></i>
+                </button>
+              </div>
+            </div>
+
+          </div>
+          {{/unless}}
+        </div>
+        {{/if}}
+
+        {{#if (eq section.type "stageCharacter")}}
+        <div class="fga-sd-section-body">
+          <div class="fga-sd-section-row">
+            <i class="fa-solid fa-fw fa-users"></i>
+            {{#if section.collapsed}}
+            <span class="fga-sd-section-summary-text">{{section.summary}}</span>
+            {{/if}}
+            <div class="fga-sd-section-actions">
+              <span class="fga-sd-always-active-tag" title="{{localize 'FGA_SCENE_DIRECTOR.SceneEditor.StageCharacterAlwaysActiveHint'}}">{{localize "FGA_SCENE_DIRECTOR.SceneEditor.StageCharacterAlwaysActive"}}</span>
+              <button type="button" class="fga-sd-fire-now" data-action="fireSection" title="{{localize 'FGA_SCENE_DIRECTOR.SceneEditor.FireNow'}}" {{#if autoActive}}disabled{{/if}}>
+                <i class="fa-solid fa-play"></i>
+              </button>
+              <button type="button" class="fga-sd-collapse-toggle" data-action="toggleCollapse">
+                <i class="fa-solid {{#if section.collapsed}}fa-chevron-down{{else}}fa-chevron-up{{/if}}"></i>
+              </button>
+            </div>
+          </div>
+          {{#unless section.collapsed}}
+          <div class="fga-sd-section-details">
+            <div class="fga-sd-stage-thumb-scale">
+              <label>{{localize "FGA_SCENE_DIRECTOR.SceneEditor.ThumbnailScale"}}
+                <input type="range" min="0.1" max="1.5" step="0.05" value="{{section.thumbScale}}" data-action="setStageCharacterThumbScale" />
+              </label>
+            </div>
+            <div class="fga-sd-stage-thumb-grid" style="--fga-sd-thumb-scale: {{section.thumbScale}};">
+              {{#each section.thumbGrid as |item|}}
+              {{#if (eq item.kind "header")}}
+              <div class="fga-sd-stage-thumb-header">{{item.name}}</div>
+              {{else}}
+              <label class="fga-sd-stage-thumb-item {{#if item.selected}}selected{{/if}}">
+                <input type="checkbox" data-action="toggleStageCharacterTarget" data-key="{{item.id}}" {{#if item.selected}}checked{{/if}} />
+                <img src="{{item.img}}" alt="{{item.name}}" />
+                <span class="fga-sd-stage-thumb-name">{{item.name}}</span>
+              </label>
+              {{/if}}
+              {{else}}
+              <span class="fga-sd-clear-character-empty">{{localize "FGA_SCENE_DIRECTOR.SceneEditor.NoBoardTokens"}}</span>
+              {{/each}}
+            </div>
+          </div>
+          {{/unless}}
+        </div>
+        {{/if}}
+
+        {{#if (eq section.type "line")}}
+        <div class="fga-sd-section-body">
+          <div class="fga-sd-section-row">
+            <i class="fa-solid fa-fw fa-message"></i>
+            {{#if section.collapsed}}
+            <span class="fga-sd-section-summary-text">{{section.summary}}</span>
+            {{else}}
+            <select data-action="setLineActor">
+              <option value="">{{localize "FGA_SCENE_DIRECTOR.SceneEditor.SelectCharacter"}}</option>
+              {{#each section.onStageActors as |a|}}
+              <option value="{{a.id}}" {{#if (eq a.id section.subjectKey)}}selected{{/if}}>{{a.name}}</option>
+              {{/each}}
+            </select>
+            {{/if}}
+            <div class="fga-sd-section-actions">
+              <i class="fa-solid fa-clock fga-sd-auto-delay-icon" title="{{localize 'FGA_SCENE_DIRECTOR.SceneEditor.AutoDelayHint'}}"></i>
+              <input type="number" class="fga-sd-auto-delay" min="0" step="250" value="{{section.autoDelayMs}}"
+                     data-action="setAutoDelayMs" title="{{localize 'FGA_SCENE_DIRECTOR.SceneEditor.AutoDelayHint'}}" />
+              <button type="button" class="fga-sd-fire-now" data-action="fireSection" title="{{localize 'FGA_SCENE_DIRECTOR.SceneEditor.FireNow'}}" {{#if autoActive}}disabled{{/if}}>
+                <i class="fa-solid fa-play"></i>
+              </button>
+              <button type="button" class="fga-sd-collapse-toggle" data-action="toggleCollapse">
+                <i class="fa-solid {{#if section.collapsed}}fa-chevron-down{{else}}fa-chevron-up{{/if}}"></i>
+              </button>
+            </div>
+          </div>
+          {{#unless section.collapsed}}
+          <div class="fga-sd-section-details">
+            <textarea rows="2" data-action="setLineText" placeholder="...">{{section.text}}</textarea>
+            <label class="fga-sd-visibility-toggle" title="{{localize 'FGA_SCENE_DIRECTOR.SceneEditor.VisibilityHint'}}">
+              <input type="checkbox" {{#if section.isPublic}}checked{{/if}} data-action="toggleVisibility" />
+              <span>{{#if section.isPublic}}{{localize "FGA_SCENE_DIRECTOR.SceneEditor.Public"}}{{else}}{{localize "FGA_SCENE_DIRECTOR.SceneEditor.Private"}}{{/if}}</span>
+            </label>
+            <label class="fga-sd-checkbox fga-sd-bubble-toggle" title="{{localize 'FGA_SCENE_DIRECTOR.SceneEditor.BubbleHint'}}">
+              <input type="checkbox" {{#if section.bubbleEnabled}}checked{{/if}} {{#if section.isPublic}}disabled{{/if}} data-action="toggleBubble" />
+              {{localize "FGA_SCENE_DIRECTOR.SceneEditor.Bubble"}}
+            </label>
+          </div>
+          {{/unless}}
+        </div>
+        {{/if}}
+
+        {{#if (eq section.type "clearCharacter")}}
+        <div class="fga-sd-section-body">
+          <div class="fga-sd-section-row">
+            <i class="fa-solid fa-fw fa-user-xmark"></i>
+            <span class="fga-sd-section-summary-text">{{section.summary}}</span>
+            <div class="fga-sd-section-actions">
+              <i class="fa-solid fa-clock fga-sd-auto-delay-icon" title="{{localize 'FGA_SCENE_DIRECTOR.SceneEditor.AutoDelayHint'}}"></i>
+              <input type="number" class="fga-sd-auto-delay" min="0" step="250" value="{{section.autoDelayMs}}"
+                     data-action="setAutoDelayMs" title="{{localize 'FGA_SCENE_DIRECTOR.SceneEditor.AutoDelayHint'}}" />
+              <button type="button" class="fga-sd-fire-now" data-action="fireSection" title="{{localize 'FGA_SCENE_DIRECTOR.SceneEditor.FireNow'}}" {{#if autoActive}}disabled{{/if}}>
+                <i class="fa-solid fa-play"></i>
+              </button>
+              <button type="button" class="fga-sd-collapse-toggle" data-action="toggleCollapse">
+                <i class="fa-solid {{#if section.collapsed}}fa-chevron-down{{else}}fa-chevron-up{{/if}}"></i>
+              </button>
+            </div>
+          </div>
+          {{#unless section.collapsed}}
+          <div class="fga-sd-section-details">
+            <div class="fga-sd-clear-character-targets">
+              {{#each section.clearTargets as |t|}}
+              <label class="fga-sd-checkbox">
+                <input type="checkbox" data-action="toggleClearCharacterTarget" data-key="{{t.id}}" {{#if t.checked}}checked{{/if}} />
+                {{t.name}}
+              </label>
+              {{else}}
+              <span class="fga-sd-clear-character-empty">{{localize "FGA_SCENE_DIRECTOR.SceneEditor.NoActiveCharacters"}}</span>
+              {{/each}}
+            </div>
+            <label>{{localize "FGA_SCENE_DIRECTOR.SceneEditor.FadeOut"}}
+              <input type="number" min="0" step="50" value="{{section.fadeOutMs}}" data-action="setFadeOut" />
+            </label>
+          </div>
+          {{/unless}}
+        </div>
+        {{/if}}
+
+        {{#if (eq section.type "clearText")}}
+        <div class="fga-sd-section-body">
+          <div class="fga-sd-section-row">
+            <i class="fa-solid fa-fw fa-eraser"></i>
+            <span class="fga-sd-section-summary-text">{{localize "FGA_SCENE_DIRECTOR.SceneEditor.ClearText"}}</span>
+            <div class="fga-sd-section-actions">
+              <i class="fa-solid fa-clock fga-sd-auto-delay-icon" title="{{localize 'FGA_SCENE_DIRECTOR.SceneEditor.AutoDelayHint'}}"></i>
+              <input type="number" class="fga-sd-auto-delay" min="0" step="250" value="{{section.autoDelayMs}}"
+                     data-action="setAutoDelayMs" title="{{localize 'FGA_SCENE_DIRECTOR.SceneEditor.AutoDelayHint'}}" />
+              <button type="button" class="fga-sd-fire-now" data-action="fireSection" title="{{localize 'FGA_SCENE_DIRECTOR.SceneEditor.FireNow'}}" {{#if autoActive}}disabled{{/if}}>
+                <i class="fa-solid fa-play"></i>
+              </button>
+              <div class="fga-sd-collapse-spacer" aria-hidden="true"></div>
+            </div>
+          </div>
+        </div>
+        {{/if}}
+
+        {{#if (eq section.type "backgroundEffect")}}
+        <div class="fga-sd-section-body">
+          <div class="fga-sd-section-row">
+            <i class="fa-solid fa-fw fa-droplet"></i>
+            <span class="fga-sd-section-summary-text">{{localize "FGA_SCENE_DIRECTOR.SceneEditor.BackgroundEffect"}}</span>
+            <div class="fga-sd-section-actions">
+              <i class="fa-solid fa-clock fga-sd-auto-delay-icon" title="{{localize 'FGA_SCENE_DIRECTOR.SceneEditor.AutoDelayHint'}}"></i>
+              <input type="number" class="fga-sd-auto-delay" min="0" step="250" value="{{section.autoDelayMs}}"
+                     data-action="setAutoDelayMs" title="{{localize 'FGA_SCENE_DIRECTOR.SceneEditor.AutoDelayHint'}}" />
+              <button type="button" class="fga-sd-fire-now" data-action="fireSection" title="{{localize 'FGA_SCENE_DIRECTOR.SceneEditor.FireNow'}}" {{#if autoActive}}disabled{{/if}}>
+                <i class="fa-solid fa-play"></i>
+              </button>
+              <button type="button" class="fga-sd-collapse-toggle" data-action="toggleCollapse">
+                <i class="fa-solid {{#if section.collapsed}}fa-chevron-down{{else}}fa-chevron-up{{/if}}"></i>
+              </button>
+            </div>
+          </div>
+          {{#unless section.collapsed}}
+          <div class="fga-sd-section-details">
+            <label class="fga-sd-checkbox">
+              <input type="checkbox" {{#if section.blurEnabled}}checked{{/if}} data-action="toggleBlurEnabled" /> {{localize "FGA_SCENE_DIRECTOR.SceneEditor.Blur"}}
+            </label>
+            <label>{{localize "FGA_SCENE_DIRECTOR.SceneEditor.BlurAmount"}}
+              <input type="number" min="0" max="40" step="1" value="{{section.blurAmount}}" data-action="setBlurAmount" />
+            </label>
+            <label class="fga-sd-checkbox">
+              <input type="checkbox" {{#if section.fadeEnabled}}checked{{/if}} data-action="toggleFadeEnabled" /> {{localize "FGA_SCENE_DIRECTOR.SceneEditor.Fade"}}
+            </label>
+            <label>{{localize "FGA_SCENE_DIRECTOR.SceneEditor.FadeColor"}}
+              <input type="color" value="{{section.fadeColorHex}}" data-action="setFadeColor" />
+            </label>
+            <label>{{localize "FGA_SCENE_DIRECTOR.SceneEditor.FadeOpacity"}}
+              <input type="number" min="0" max="100" step="5" value="{{section.fadeOpacityPct}}" data-action="setFadeOpacity" />
+            </label>
+            <label>{{localize "FGA_SCENE_DIRECTOR.SceneEditor.EffectDuration"}}
+              <input type="number" min="0" step="50" value="{{section.durationMs}}" data-action="setEffectDuration" />
+            </label>
+          </div>
+          {{/unless}}
+        </div>
+        {{/if}}
+
+        {{#if (eq section.type "clearBackgroundEffect")}}
+        <div class="fga-sd-section-body">
+          <div class="fga-sd-section-row">
+            <i class="fa-solid fa-fw fa-droplet-slash"></i>
+            <span class="fga-sd-section-summary-text">{{localize "FGA_SCENE_DIRECTOR.SceneEditor.ClearBackgroundEffect"}}</span>
+            <div class="fga-sd-section-actions">
+              <i class="fa-solid fa-clock fga-sd-auto-delay-icon" title="{{localize 'FGA_SCENE_DIRECTOR.SceneEditor.AutoDelayHint'}}"></i>
+              <input type="number" class="fga-sd-auto-delay" min="0" step="250" value="{{section.autoDelayMs}}"
+                     data-action="setAutoDelayMs" title="{{localize 'FGA_SCENE_DIRECTOR.SceneEditor.AutoDelayHint'}}" />
+              <button type="button" class="fga-sd-fire-now" data-action="fireSection" title="{{localize 'FGA_SCENE_DIRECTOR.SceneEditor.FireNow'}}" {{#if autoActive}}disabled{{/if}}>
+                <i class="fa-solid fa-play"></i>
+              </button>
+              <button type="button" class="fga-sd-collapse-toggle" data-action="toggleCollapse">
+                <i class="fa-solid {{#if section.collapsed}}fa-chevron-down{{else}}fa-chevron-up{{/if}}"></i>
+              </button>
+            </div>
+          </div>
+          {{#unless section.collapsed}}
+          <div class="fga-sd-section-details">
+            <label>{{localize "FGA_SCENE_DIRECTOR.SceneEditor.EffectDuration"}}
+              <input type="number" min="0" step="50" value="{{section.durationMs}}" data-action="setClearEffectDuration" />
+            </label>
+          </div>
+          {{/unless}}
+        </div>
+        {{/if}}
+
+        {{#if (eq section.type "clearScene")}}
+        <div class="fga-sd-section-body">
+          <div class="fga-sd-section-row fga-sd-section-row-clear-scene">
+            <i class="fa-solid fa-fw fa-broom"></i>
+            <span class="fga-sd-section-summary-text">{{localize "FGA_SCENE_DIRECTOR.SceneEditor.EndScene"}}</span>
+            <div class="fga-sd-section-actions">
+              <button type="button" class="fga-sd-fire-now" data-action="fireSection" title="{{localize 'FGA_SCENE_DIRECTOR.SceneEditor.FireNow'}}" {{#if autoActive}}disabled{{/if}}>
+                <i class="fa-solid fa-play"></i>
+              </button>
+              <div class="fga-sd-collapse-spacer" aria-hidden="true"></div>
+            </div>
+          </div>
+        </div>
+        {{/if}}
+
+        {{#if (eq section.type "pause")}}
+        <div class="fga-sd-section-body">
+          <div class="fga-sd-section-row">
+            <i class="fa-solid fa-fw fa-circle-pause"></i>
+            <span class="fga-sd-section-summary-text">
+              {{localize "FGA_SCENE_DIRECTOR.SceneEditor.SceneControlsPause"}}
+              {{#if section.skipInAutoPlay}}<span class="fga-sd-pause-skipped-tag">{{localize "FGA_SCENE_DIRECTOR.SceneEditor.SkippedInAutoPlayTag"}}</span>{{/if}}
+            </span>
+            <div class="fga-sd-section-actions">
+              <button type="button" class="fga-sd-pause-skip-toggle {{#if section.skipInAutoPlay}}on{{/if}}" data-action="toggleSkipInAutoPlay" title="{{localize 'FGA_SCENE_DIRECTOR.SceneEditor.SkipInAutoPlayHint'}}" {{#if autoActive}}disabled{{/if}}>
+                <i class="fa-solid fa-forward"></i>
+              </button>
+              <button type="button" class="fga-sd-fire-now" data-action="fireSection" title="{{localize 'FGA_SCENE_DIRECTOR.SceneEditor.ScenePauseFireHint'}}" {{#if autoActive}}disabled{{/if}}>
+                <i class="fa-solid fa-play"></i>
+              </button>
+              <div class="fga-sd-collapse-spacer" aria-hidden="true"></div>
+            </div>
+          </div>
+        </div>
+        {{/if}}
+
+        <button type="button" class="fga-sd-section-delete" data-action="deleteSection" title="{{localize 'FGA_SCENE_DIRECTOR.SceneEditor.Delete'}}">
+          <i class="fa-solid fa-trash"></i>
+        </button>
+      </li>
+      {{/each}}
+    </ol>
+
+    <footer class="fga-sd-add-buttons">
+      <div class="fga-sd-button-group">
+        <div class="fga-sd-button-group-title">{{localize "FGA_SCENE_DIRECTOR.SceneEditor.GroupCreateAdd"}}</div>
+        <div class="fga-sd-button-group-row">
+          <button type="button" data-action="addCharacter"><i class="fa-solid fa-user-plus"></i> {{localize "FGA_SCENE_DIRECTOR.SceneEditor.AddCharacter"}}</button>
+          <button type="button" data-action="addCharacterControl" title="{{localize 'FGA_SCENE_DIRECTOR.SceneEditor.AddCharacterControlHint'}}"><i class="fa-solid fa-sliders"></i> {{localize "FGA_SCENE_DIRECTOR.SceneEditor.CharacterControl"}}</button>
+          <button type="button" data-action="addStageCharacter" title="{{localize 'FGA_SCENE_DIRECTOR.SceneEditor.StageCharacterHint'}}"><i class="fa-solid fa-users"></i> {{localize "FGA_SCENE_DIRECTOR.SceneEditor.StageCharacter"}}</button>
+          <button type="button" data-action="addText"><i class="fa-solid fa-message"></i> {{localize "FGA_SCENE_DIRECTOR.SceneEditor.AddText"}}</button>
+          <button type="button" data-action="addBackgroundEffect"><i class="fa-solid fa-droplet"></i> {{localize "FGA_SCENE_DIRECTOR.SceneEditor.BackgroundEffect"}}</button>
+          <button type="button" data-action="addSceneControls" title="{{localize 'FGA_SCENE_DIRECTOR.SceneEditor.AddSceneControlsHint'}}"><i class="fa-solid fa-circle-pause"></i> {{localize "FGA_SCENE_DIRECTOR.SceneEditor.AddSceneControls"}}</button>
+        </div>
+      </div>
+      <div class="fga-sd-button-group">
+        <div class="fga-sd-button-group-title">{{localize "FGA_SCENE_DIRECTOR.SceneEditor.GroupClearRemove"}}</div>
+        <div class="fga-sd-button-group-row">
+          <button type="button" data-action="addClearCharacter"><i class="fa-solid fa-user-xmark"></i> {{localize "FGA_SCENE_DIRECTOR.SceneEditor.ClearCharacter"}}</button>
+          <button type="button" data-action="addClearText"><i class="fa-solid fa-eraser"></i> {{localize "FGA_SCENE_DIRECTOR.SceneEditor.ClearText"}}</button>
+          <button type="button" data-action="addClearBackgroundEffect"><i class="fa-solid fa-droplet-slash"></i> {{localize "FGA_SCENE_DIRECTOR.SceneEditor.ClearBackgroundEffect"}}</button>
+          <button type="button" data-action="addClearScene" title="{{localize 'FGA_SCENE_DIRECTOR.SceneEditor.AddClearSceneHint'}}"><i class="fa-solid fa-broom"></i> {{localize "FGA_SCENE_DIRECTOR.SceneEditor.AddClearScene"}}</button>
+        </div>
+      </div>
+      <div class="fga-sd-button-group">
+        <div class="fga-sd-button-group-title">{{localize "FGA_SCENE_DIRECTOR.SceneEditor.GroupManualActions"}}</div>
+        <div class="fga-sd-button-group-row">
+          <button type="button" class="fga-sd-clear-scene" data-action="clearScene" title="{{localize 'FGA_SCENE_DIRECTOR.SceneEditor.ClearSceneHint'}}"><i class="fa-solid fa-broom"></i> {{localize "FGA_SCENE_DIRECTOR.SceneEditor.ClearScene"}}</button>
+          <button type="button" class="fga-sd-delete-all-sections" data-action="deleteAllSections"><i class="fa-solid fa-trash"></i> {{localize "FGA_SCENE_DIRECTOR.SceneEditor.DeleteAllSections"}}</button>
+        </div>
+      </div>
+    </footer>
+
+    {{else}}
+    <div class="fga-sd-empty-state">
+      <p>{{localize "FGA_SCENE_DIRECTOR.SceneEditor.NewScene"}} &rarr;</p>
+    </div>
+    {{/if}}
+
+  </section>
+</div>

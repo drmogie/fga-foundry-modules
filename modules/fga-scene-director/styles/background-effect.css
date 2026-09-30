@@ -1,0 +1,12 @@
+/* Full-viewport blur/fade layer, sits above the game canvas and below staged portraits
+   and the caption bar. Starts fully transparent/clear; background-effect.js animates
+   backdrop-filter and background-color on it directly. */
+#fga-sd-bg-effect-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
+  background-color: rgba(0, 0, 0, 0);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}

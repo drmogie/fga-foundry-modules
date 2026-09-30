@@ -1,0 +1,94 @@
+<div class="ccp-settings-body ccp-overrides-body">
+  <p class="hint">Placement, size, flip, and fade timing are all GM-controlled now — pick a target on the left, then set its look on the right. The Shared Default always applies to every player character unless you give one a custom override below.</p>
+
+  <div class="ccp-overrides-layout">
+    <div class="ccp-overrides-list">
+      <p class="ccp-overrides-heading">Defaults</p>
+      {{#each entries}}
+      <button type="button" data-entry-id="{{id}}" class="{{#if selected}}active{{/if}}">{{label}}</button>
+      {{/each}}
+
+      <p class="ccp-overrides-heading">Individual Characters</p>
+      {{#each actorEntries}}
+      <button type="button" data-entry-id="{{id}}" class="{{#if selected}}active{{/if}}">{{label}}</button>
+      {{/each}}
+    </div>
+
+    <div class="ccp-overrides-detail">
+      <h3>{{selectedLabel}}</h3>
+
+      {{#if showModeSelector}}
+      <div class="form-group">
+        <label>Mode</label>
+        <select name="entryMode">
+          {{#each modeOptions}}
+          <option value="{{key}}" {{#if selected}}selected{{/if}}>{{label}}</option>
+          {{/each}}
+        </select>
+      </div>
+      {{/if}}
+
+      <div class="ccp-ov-fields">
+        <div class="form-group">
+          <label>Preview (only visible to you)</label>
+          <div class="ccp-preview-box">
+            <div class="ccp-preview-thumb" id="ccp-ov-preview-thumb">
+              <img id="ccp-ov-preview-img" src="{{previewImg}}" alt="Preview">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Image Scale: <span id="ccp-ov-scale-output">{{scale}}x</span></label>
+          <input type="range" id="ccp-ov-scale-range" name="entryScale" min="0.5" max="3" step="0.1" value="{{scale}}">
+        </div>
+
+        <div class="form-group">
+          <label>Position</label>
+          <select name="entryPositionPreset">
+            {{#each positionPresets}}
+            <option value="{{key}}" {{#if selected}}selected{{/if}}>{{label}}</option>
+            {{/each}}
+          </select>
+        </div>
+
+        <div class="form-group ccp-ov-custom-position">
+          <label>Custom X (%)</label>
+          <input type="range" id="ccp-ov-x-range" min="0" max="100" step="1" value="{{positionX}}">
+          <input type="number" id="ccp-ov-x-number" name="entryPositionX" min="0" max="100" value="{{positionX}}">
+
+          <label>Custom Y (%)</label>
+          <input type="range" id="ccp-ov-y-range" min="0" max="100" step="1" value="{{positionY}}">
+          <input type="number" id="ccp-ov-y-number" name="entryPositionY" min="0" max="100" value="{{positionY}}">
+
+          <p class="hint">Only used when Position above is set to "Custom (use sliders below)".</p>
+        </div>
+
+        <div class="form-group">
+          <label><input type="checkbox" name="entryFlipHorizontal" {{#if flipHorizontal}}checked{{/if}}> Flip horizontally (mirror)</label>
+          <label><input type="checkbox" name="entryFlipVertical" {{#if flipVertical}}checked{{/if}}> Flip vertically (upside down)</label>
+        </div>
+
+        <div class="form-group">
+          <label><input type="checkbox" name="entryFadeOut" {{#if fadeOut}}checked{{/if}}> Fade out smoothly (unchecked = vanish instantly)</label>
+        </div>
+
+        <div class="form-group">
+          <label>Image Source</label>
+          <select name="entryImageSource">
+            {{#each imageSources}}
+            <option value="{{key}}" {{#if selected}}selected{{/if}}>{{label}}</option>
+            {{/each}}
+          </select>
+          <p class="hint">Leave this as "Inherit" to let each viewer keep picking their own portrait vs. token. Only pin a specific one here if you want everyone to see the same image for this target.</p>
+        </div>
+      </div>
+
+      <p class="hint">Switching targets on the left keeps your edits for all of them — nothing is written to the server until you click Save below.</p>
+    </div>
+  </div>
+
+  <footer class="form-footer">
+    <button type="submit"><i class="fa-solid fa-save"></i> Save</button>
+  </footer>
+</div>

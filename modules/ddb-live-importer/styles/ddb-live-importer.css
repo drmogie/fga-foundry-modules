@@ -1,0 +1,249 @@
+.ddb-live-importer-open {
+  flex: none;
+  width: auto;
+  margin: 4px;
+}
+
+.ddb-live-importer .ddbli-steps {
+  margin: 0 0 10px 18px;
+  padding: 0;
+}
+
+.ddb-live-importer .ddbli-steps li {
+  margin-bottom: 4px;
+}
+
+.ddb-live-importer .ddbli-target {
+  margin: 0 0 10px 0;
+}
+
+.ddb-live-importer button.ddb-live-importer-open {
+  width: 100%;
+  margin: 0 0 10px 0;
+}
+
+.ddb-live-importer .ddbli-url {
+  margin-bottom: 10px;
+}
+
+.ddb-live-importer .ddbli-url label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 2px;
+}
+
+.ddb-live-importer .ddbli-url input {
+  width: 100%;
+}
+
+.ddb-live-importer button.ddbli-json-btn {
+  width: 100%;
+  margin: 0 0 10px 0;
+}
+
+.ddb-live-importer button.ddbli-json-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.ddb-live-importer .ddbli-json {
+  margin-bottom: 10px;
+}
+
+.ddb-live-importer .ddbli-json label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 2px;
+}
+
+.ddb-live-importer .ddbli-json textarea {
+  width: 100%;
+  font-family: monospace;
+  font-size: 0.85em;
+  resize: vertical;
+}
+
+.ddb-live-importer button.ddbli-import-btn {
+  width: 100%;
+  font-weight: bold;
+}
+
+.ddbli-sync-panel .ddbli-panel-section {
+  margin-bottom: 16px;
+}
+
+.ddbli-sync-panel .ddbli-panel-section h3 {
+  margin: 0 0 6px 0;
+}
+
+.ddbli-sync-panel .ddbli-panel-actions {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.ddbli-sync-panel .ddbli-panel-actions button {
+  flex: 1;
+}
+
+.ddbli-sync-panel .ddbli-results {
+  margin-bottom: 10px;
+}
+
+.ddbli-sync-panel .ddbli-results label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 2px;
+}
+
+.ddbli-sync-panel .ddbli-results textarea {
+  width: 100%;
+  font-family: monospace;
+  font-size: 0.85em;
+  resize: vertical;
+}
+
+.ddbli-sync-panel .ddbli-result-line {
+  margin: 8px 0 0 0;
+  font-weight: bold;
+}
+
+.ddbli-sync-panel .ddbli-portrait-hint {
+  margin: 0 0 8px 0;
+  font-size: 0.85em;
+  font-style: italic;
+  color: var(--color-text-dark-secondary, #777);
+}
+
+.ddbli-sync-panel .ddbli-portrait-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.ddbli-sync-panel .ddbli-portrait {
+  width: 72px;
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
+}
+
+.ddbli-sync-panel .ddbli-portrait img {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  transition: box-shadow 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+}
+
+.ddbli-sync-panel .ddbli-portrait:hover img {
+  border-color: #ffb020;
+}
+
+.ddbli-sync-panel .ddbli-portrait.ddbli-selected img {
+  border-color: #ffb020;
+  transform: scale(1.03);
+  /* Amber aura around the selected portrait. */
+  box-shadow:
+    0 0 8px 2px rgba(255, 176, 32, 0.9),
+    0 0 18px 6px rgba(255, 176, 32, 0.55);
+}
+
+.ddbli-sync-panel .ddbli-portrait-name {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.75em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ddbli-sync-panel .ddbli-sync-selected-btn {
+  width: 100%;
+  margin-bottom: 4px;
+  font-weight: bold;
+}
+
+.ddbli-sync-panel .ddbli-sync-selected-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.ddbli-sync-panel .ddbli-open-settings-btn {
+  width: 100%;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--color-border-light-tertiary, #999);
+}
+
+.ddbli-sync-panel .ddbli-tabs {
+  display: flex;
+  gap: 2px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid var(--color-border-light-tertiary, #999);
+}
+
+.ddbli-sync-panel .ddbli-tab-btn {
+  flex: 1;
+  padding: 4px 2px;
+  border: none;
+  border-bottom: 3px solid transparent;
+  background: none;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.ddbli-sync-panel .ddbli-tab-btn.active {
+  border-bottom-color: #ffb020;
+}
+
+.ddbli-sync-panel .ddbli-toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: bold;
+  margin-bottom: 2px;
+}
+
+.ddbli-sync-panel .ddbli-toggle-row input {
+  margin: 0;
+}
+
+.ddbli-sync-panel .ddbli-toggle-master {
+  font-size: 1.05em;
+}
+
+.ddbli-sync-panel .ddbli-toggle-hint {
+  margin: 0 0 8px 22px;
+  font-size: 0.85em;
+  font-style: italic;
+  color: var(--color-text-dark-secondary, #777);
+}
+
+.ddbli-sync-panel .ddbli-toggle-subgroup {
+  margin: 0 0 8px 22px;
+  padding: 2px 0 2px 10px;
+  border-left: 2px solid var(--color-border-light-tertiary, #999);
+}
+
+.ddb-live-importer .ddbli-proxy-status {
+  margin: -6px 0 10px 0;
+  font-size: 0.85em;
+  font-style: italic;
+  color: var(--color-text-dark-secondary, #777);
+}
+
+.ddbli-sync-panel .ddbli-proxy-btn {
+  width: 100%;
+  margin-bottom: 4px;
+  font-weight: bold;
+}
+
+.ddbli-sync-panel .ddbli-proxy-hint {
+  margin: 0 0 10px 0;
+  font-size: 0.85em;
+  font-style: italic;
+  color: var(--color-text-dark-secondary, #777);
+}

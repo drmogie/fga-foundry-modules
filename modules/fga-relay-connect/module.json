@@ -1,0 +1,14 @@
+{
+  "id": "fga-relay-connect",
+  "title": "FGA Relay Connect",
+  "description": "Connects this Foundry client to your Foundry VTT MCP & Rest Relay so tools and Claude can work with your world.",
+  "version": "2026.09.29.15",
+  "authors": [{ "name": "DrMogie" }],
+  "compatibility": { "minimum": "13", "verified": "14" },
+  "esmodules": ["scripts/main.mjs"],
+  "languages": [{ "lang": "en", "name": "English", "path": "lang/en.json" }],
+  "url": "https://github.com/drmogie/fga-foundry-modules/tree/main/modules/fga-relay-connect",
+  "manifest": "https://raw.githubusercontent.com/drmogie/fga-foundry-modules/main/modules/fga-relay-connect/module.json",
+  "download": "https://github.com/drmogie/fga-foundry-modules/releases/download/fga-relay-connect-2026.09.29.15/fga-relay-connect.zip",
+  "bugs": "https://github.com/drmogie/fga-foundry-modules/issues"
+}

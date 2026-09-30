@@ -1,0 +1,30 @@
+{
+  "id": "fga-mount-action",
+  "title": "FGA Mount Action",
+  "description": "Adds buttons to the right-click token HUD of D&D 5e Group and Vehicle tokens. Players who own a member (or crew) can store or place their own token near it. The GM can extract or store every member within a set range.",
+  "version": "2026.09.29.02",
+  "bugs": "https://github.com/drmogie/fga-foundry-modules/issues",
+  "download": "https://github.com/drmogie/fga-foundry-modules/releases/download/fga-mount-action-2026.09.29.02/fga-mount-action.zip",
+  "manifest": "https://raw.githubusercontent.com/drmogie/fga-foundry-modules/main/modules/fga-mount-action/module.json",
+  "url": "https://github.com/drmogie/fga-foundry-modules/tree/main/modules/fga-mount-action",
+  "compatibility": {
+    "minimum": "13",
+    "verified": "13"
+  },
+  "authors": [
+    { "name": "Mogie" }
+  ],
+  "esmodules": [
+    "scripts/main.js"
+  ],
+  "languages": [
+    { "lang": "en", "name": "English", "path": "lang/en.json" }
+  ],
+  "relationships": {
+    "systems": [
+      { "id": "dnd5e", "type": "system", "compatibility": { "minimum": "5.0.0" } }
+    ]
+  },
+  "socket": true,
+  "readme": "README.md"
+}

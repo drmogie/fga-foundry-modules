@@ -1,0 +1,31 @@
+{
+  "id": "fga-battle-director",
+  "title": "FGA Battle Director",
+  "description": "GM tool for the FGA. Stage premade battlefield scenes (or make them from map images), then send the party there in one click. Freezes movement and initiative until the GM clicks Start Battle, then rolls initiative and starts combat.",
+  "version": "2026.09.29.02",
+  "bugs": "https://github.com/drmogie/fga-foundry-modules/issues",
+  "compatibility": {
+    "minimum": "13",
+    "verified": "13"
+  },
+  "authors": [
+    {
+      "name": "DrMogie"
+    }
+  ],
+  "socket": true,
+  "esmodules": ["scripts/main.js"],
+  "styles": ["styles/battle-director.css"],
+  "relationships": {
+    "systems": [
+      {
+        "id": "dnd5e",
+        "type": "system",
+        "compatibility": {}
+      }
+    ]
+  },
+  "url": "https://github.com/drmogie/fga-foundry-modules/tree/main/modules/fga-battle-director",
+  "manifest": "https://raw.githubusercontent.com/drmogie/fga-foundry-modules/main/modules/fga-battle-director/module.json",
+  "download": "https://github.com/drmogie/fga-foundry-modules/releases/download/fga-battle-director-2026.09.29.02/fga-battle-director.zip"
+}

@@ -1,0 +1,33 @@
+{
+  "FGA_AUTO_DAMAGE": {
+    "Enabled": {
+      "Name": "Auto roll damage",
+      "Hint": "After you roll an attack, damage rolls for you if your rule below is met. This only changes your own rolls."
+    },
+    "Trigger": {
+      "Name": "When to roll damage",
+      "Hint": "Pick the rule for your own attacks.",
+      "Hit": "When the attack hits",
+      "Crit": "Only on a critical hit",
+      "Always": "Always, hit or miss"
+    },
+    "NoTarget": {
+      "Name": "If you have no target picked",
+      "Hint": "The module needs a target to check armor class. A natural 20 always rolls damage.",
+      "Skip": "Do not roll damage",
+      "Roll": "Roll damage anyway"
+    },
+    "ShowDialog": {
+      "Name": "Show the damage dialog",
+      "Hint": "Off means damage rolls instantly with no pop up."
+    },
+    "ChatNote": {
+      "Name": "Post a short hit or miss note",
+      "Hint": "Adds one small line in chat, like: Hit on Foreman (19 vs AC 18)."
+    },
+    "ShowName": {
+      "Name": "Show the attacker name in the note",
+      "Hint": "Off by default. The chat message already shows who is speaking. Turn on to also put the name inside the note."
+    }
+  }
+}

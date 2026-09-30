@@ -1,0 +1,31 @@
+{
+  "id": "fga-character-popup",
+  "title": "FGA Character Popup",
+  "description": "Shows a big floating character portrait on screen when that character speaks in chat, gets bloodied/healed/revived, or has a classified buff/debuff applied — with an optional chat bubble showing the message text (each character's own bubble color and, optionally, its own custom text color, visible the same way to everyone), GM-controlled size/position/flip/fade, and player-chosen portrait vs. token image.",
+  "version": "2026.09.29.03",
+  "bugs": "https://github.com/drmogie/fga-foundry-modules/issues",
+  "download": "https://github.com/drmogie/fga-foundry-modules/releases/download/fga-character-popup-2026.09.29.03/fga-character-popup.zip",
+  "manifest": "https://raw.githubusercontent.com/drmogie/fga-foundry-modules/main/modules/fga-character-popup/module.json",
+  "url": "https://github.com/drmogie/fga-foundry-modules/tree/main/modules/fga-character-popup",
+  "compatibility": {
+    "minimum": "12",
+    "verified": "14"
+  },
+  "authors": [
+    { "name": "Mogie" }
+  ],
+  "esmodules": [
+    "scripts/main.js"
+  ],
+  "styles": [
+    "styles/popup.css",
+    "styles/settings.css"
+  ],
+  "relationships": {
+    "recommends": [
+      { "id": "lib-wrapper", "type": "module", "reason": "Not required by v1, but handy if we later need to safely patch core chat behavior." },
+      { "id": "socketlib", "type": "module", "reason": "Not required by v1 (popups are purely client-side), but useful if we later add cross-client sync." }
+    ]
+  },
+  "readme": "README.md"
+}

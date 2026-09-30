@@ -1,0 +1,91 @@
+# FGA Relay Connect
+
+Version: 2026.09.29.15
+
+Foundry module that links one browser to your Foundry VTT MCP & Rest Relay (add-on in https://github.com/drmogie/ha-foundry-vtt-addon).
+
+## Use
+- Copy the `fga-relay-connect` folder into Foundry `Data/modules`.
+- Restart Foundry and turn the module on.
+- Game Settings, Configure Settings, FGA Relay Connect.
+- Paste the relay address and connect key from the relay page.
+- Turn on "Connect this browser to the relay".
+
+Settings are per browser. Players leave it off.
+
+## What it does
+- Opens one socket to the relay and says hello with the world, system and version.
+- Reconnects on its own, waiting longer each time up to 30 seconds.
+- Stops and tells you if the key is wrong.
+- Answers commands from the relay: ping, world, list, get, chat, encounters, effects, scene, users, roll, sendChat, update, create, delete, useItem, moveToken, switchScene.
+- Never touches User or Setting documents.
+
+## Tests
+    node --test tests/link.test.mjs tests/commands.test.mjs tests/extras.test.mjs tests/indicators.test.mjs
+
+## Changelog
+### 2026.09.29.14
+
+- First release in its own GitHub repository. Added manifest and download links, LICENSE and CHANGELOG. No code changes.
+
+### 2026.09.29.13
+
+- Using a weapon or spell with one attack activity now rolls the attack from the module, with no dialog. Before, the system opened its Attack Roll box on the GM screen, most often for weapons with attack modes like a Longsword.
+
+### 2026.09.29.12
+
+- Using an item no longer asks anyone to click the board to place a spell area. Pass template to place one.
+
+### 2026.09.29.11
+
+- Regions (spell areas) can be deleted through the relay.
+- Using an item reports any spell area it left, and can remove it with clearArea.
+
+### 2026.09.29.10
+- Status lights on the module settings page. A panel at the top shows if the module is connected to the relay: green when connected (with the time), amber while connecting, red for a missing setting, a rejected key or another browser taking over, grey when off. It updates live while the page is open.
+- Checks under the relay address and connect key fields, as you type: right scheme, wss needed on an https Foundry page, key present and not cut short. A note says when you have changes that are not saved yet.
+- A Reconnect now button in the panel.
+
+### 2026.09.29.9
+- Compendium import can add Item entries (spells, features, gear) straight onto an actor. Give `actorUuid`, and one `id` or a list of `ids` (up to 30).
+
+### 2026.09.29.8
+- Wording: the relay is now called Foundry VTT MCP & Rest Relay. The module keeps its name and id.
+
+### 2026.09.29.7
+- Conditions: list, add, remove, toggle.
+- Death saves, saving throws, ability checks and skill checks, with advantage and an optional DC.
+- Spell slots, item charges and consumable counts: read, spend, restore, set.
+- Last attack: attacker, weapon, roll, hit or miss, target, armor class and damage in one answer.
+- Targets, tokens (create, show or hide, rotate), journals and pages, rollable tables.
+- Compendiums: list, search, import an actor or item, optionally place the token.
+
+### 2026.09.29.6
+- Short rest can spend hit dice. Biggest die first, adds Con, stops at full hit points, and tracks the used dice on the class.
+
+### 2026.09.29.5
+- Long and short rests for an actor or token.
+- 49 tests with a pretend Foundry.
+
+### 2026.09.29.4
+- Combat: make a combat, add tokens, roll initiative, start, turns and rounds, end.
+- Apply damage, healing or temporary hit points.
+- 47 tests with a pretend Foundry.
+
+### 2026.09.29.3
+- List folders and read files from Foundry data.
+- 40 tests with a pretend Foundry.
+
+### 2026.09.29.2
+- Commands for reading and changing the world, rolling, chat, items, tokens and scenes.
+- 33 tests with a pretend Foundry.
+
+### 2026.09.29.1
+- First version.
+
+## Install from GitHub
+
+In Foundry, open Add-on Modules, then Install Module.
+Paste this Manifest URL and click Install:
+
+`https://raw.githubusercontent.com/drmogie/fga-foundry-modules/main/modules/fga-relay-connect/module.json`

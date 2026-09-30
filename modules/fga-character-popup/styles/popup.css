@@ -1,0 +1,294 @@
+/* The floating portrait popup itself */
+
+#ccp-popup.ccp-position {
+  position: fixed;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 1;
+}
+
+#ccp-popup.ccp-fade-out {
+  transition: opacity 0.6s ease;
+  opacity: 0;
+}
+
+#ccp-popup img {
+  display: block;
+  max-height: 60vh;
+  max-width: 40vw;
+  filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.6));
+  transition: transform 0.2s ease;
+}
+
+/* "Bloodied" red aura — GM-configurable, hugs the portrait's own silhouette
+   (via drop-shadow, not a box) so it reads as a glow around the character
+   rather than a rectangle behind them. Also used to preview the effect in
+   the GM settings form (same class, on the preview image instead). */
+#ccp-popup.ccp-bloodied img,
+.ccp-preview-thumb.ccp-bloodied img {
+  animation: ccp-bloodied-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes ccp-bloodied-pulse {
+  0%, 100% {
+    filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.6))
+      drop-shadow(0 0 12px rgba(220, 20, 20, 0.85))
+      drop-shadow(0 0 26px rgba(220, 20, 20, 0.5));
+  }
+  50% {
+    filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.6))
+      drop-shadow(0 0 20px rgba(255, 40, 40, 1))
+      drop-shadow(0 0 40px rgba(255, 40, 40, 0.75));
+  }
+}
+
+/* "Healed" green aura — fires once, on a heal while already above 0 HP.
+   Same pulsing-glow technique as bloodied, just green, and only ever
+   applied via showCharacterPopup's forceAura option (see main.js's
+   updateActor hook and popup.js), never recomputed from current state
+   the way bloodied is. */
+#ccp-popup.ccp-healed img,
+.ccp-preview-thumb.ccp-healed img {
+  animation: ccp-healed-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes ccp-healed-pulse {
+  0%, 100% {
+    filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.6))
+      drop-shadow(0 0 12px rgba(40, 200, 90, 0.85))
+      drop-shadow(0 0 26px rgba(40, 200, 90, 0.5));
+  }
+  50% {
+    filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.6))
+      drop-shadow(0 0 20px rgba(70, 230, 120, 1))
+      drop-shadow(0 0 40px rgba(70, 230, 120, 0.75));
+  }
+}
+
+/* "Revived" gold aura — fires once, the moment someone goes from 0 HP to
+   above 0. Same technique again, gold this time. */
+#ccp-popup.ccp-revived img,
+.ccp-preview-thumb.ccp-revived img {
+  animation: ccp-revived-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes ccp-revived-pulse {
+  0%, 100% {
+    filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.6))
+      drop-shadow(0 0 12px rgba(212, 170, 30, 0.85))
+      drop-shadow(0 0 26px rgba(212, 170, 30, 0.5));
+  }
+  50% {
+    filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.6))
+      drop-shadow(0 0 20px rgba(255, 210, 60, 1))
+      drop-shadow(0 0 40px rgba(255, 210, 60, 0.75));
+  }
+}
+
+/* Status-condition icon overlay — only present on the popup fired by the
+   status-icon auto-popup trigger (see showCharacterPopup's optional
+   statusIcons in popup.js / the createActiveEffect hook in main.js).
+   Centered on #ccp-popup's own box, which (despite the portrait's scale
+   transform not affecting layout) still lines up with the portrait's
+   visual center, since the scale is applied symmetrically around it. */
+.ccp-status-icons {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  gap: 6px;
+  z-index: 2;
+}
+
+.ccp-status-icons img {
+  width: calc(40px * var(--ccp-status-icon-scale, 1));
+  height: calc(40px * var(--ccp-status-icon-scale, 1));
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.85));
+}
+
+/* Quick-set 3x3 grid positions — shared by the real popup and the
+   in-form preview thumbnail below, which reuses these same classes. */
+.ccp-pos-top-left { top: 2%; left: 2%; }
+.ccp-pos-top-center { top: 2%; left: 50%; transform: translateX(-50%); }
+.ccp-pos-top-right { top: 2%; right: 2%; }
+.ccp-pos-center-left { top: 50%; left: 2%; transform: translateY(-50%); }
+.ccp-pos-center { top: 50%; left: 50%; transform: translate(-50%, -50%); }
+.ccp-pos-center-right { top: 50%; right: 2%; transform: translateY(-50%); }
+.ccp-pos-bottom-left { bottom: 2%; left: 2%; }
+.ccp-pos-bottom-center { bottom: 2%; left: 50%; transform: translateX(-50%); }
+.ccp-pos-bottom-right { bottom: 2%; right: 2%; }
+
+/* The little "your screen" preview box inside the settings forms */
+.ccp-preview-box {
+  position: relative;
+  width: 260px;
+  height: 160px;
+  margin: 0.25rem auto 0.5rem;
+  background-image:
+    linear-gradient(45deg, rgba(255, 255, 255, 0.06) 25%, transparent 25%),
+    linear-gradient(-45deg, rgba(255, 255, 255, 0.06) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, rgba(255, 255, 255, 0.06) 75%),
+    linear-gradient(-45deg, transparent 75%, rgba(255, 255, 255, 0.06) 75%);
+  background-size: 20px 20px;
+  background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+  background-color: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.ccp-preview-thumb {
+  position: absolute;
+}
+
+.ccp-preview-thumb img {
+  display: block;
+  max-height: 90px;
+  max-width: 90px;
+  transition: transform 0.15s ease;
+}
+
+/* Static demo thumbs in the GM form showing what each aura looks like —
+   not tied to any position setting, just centered in their own box. */
+#ccp-bloodied-preview-thumb,
+#ccp-healed-preview-thumb,
+#ccp-revived-preview-thumb {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Smaller side-by-side pair of preview boxes for the Healed/Revived
+   previews, so they don't take as much vertical space as the full-size
+   bloodied preview above them. */
+.ccp-heal-preview-row {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.ccp-preview-box-small {
+  width: 120px;
+  height: 100px;
+  margin: 0.25rem 0 0.5rem;
+}
+
+/* Chat bubble — a fixed top-center box showing the message text from chat,
+   same idea as FGA Scene Director's own speech bubble. Only the tail moves
+   (left/center/right, via [data-tail]) to loosely point toward whichever
+   side of the screen this viewer's own popup happens to be positioned on;
+   see popup.js's getTailBucket(). */
+.ccp-chat-bubble {
+  position: fixed;
+  top: 3%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 101; /* above the portrait (#ccp-popup is z-index 100) */
+  box-sizing: border-box;
+  width: var(--ccp-bubble-width, 420px);
+  min-height: var(--ccp-bubble-height, 90px);
+  max-width: 90vw;
+  padding: 0.65rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3em;
+  text-align: center;
+  background: var(--ccp-bubble-bg, #0a0a0e);
+  border: 1px solid var(--ccp-bubble-border, rgba(255, 255, 255, 0.18));
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  color: var(--ccp-bubble-fg, #f2f2f2);
+  font-size: 1.05rem;
+  line-height: 1.35;
+  pointer-events: none;
+  opacity: 1;
+}
+
+.ccp-chat-bubble.ccp-fade-out {
+  transition: opacity 0.6s ease;
+  opacity: 0;
+}
+
+.ccp-bubble-name {
+  font-weight: 700;
+  flex: 0 0 auto;
+}
+
+.ccp-bubble-text {
+  flex: 1 1 auto;
+}
+
+/* The tail — two stacked CSS-triangle pseudo-elements (outer border color,
+   inner fill color, slightly inset) so it reads as a thin outline around a
+   solid fill, matching the bubble's own border/background. Left and right
+   use unequal side-widths so the tail visibly leans toward that side
+   instead of just sliding sideways while still pointing straight down. */
+.ccp-chat-bubble::before,
+.ccp-chat-bubble::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  border-style: solid;
+}
+
+.ccp-chat-bubble::before {
+  border-color: var(--ccp-bubble-border, rgba(255, 255, 255, 0.18)) transparent transparent transparent;
+}
+
+.ccp-chat-bubble::after {
+  margin-top: -1px;
+  border-color: var(--ccp-bubble-bg, #0a0a0e) transparent transparent transparent;
+}
+
+.ccp-chat-bubble[data-tail="center"]::before {
+  left: 50%;
+  margin-left: -14px;
+  border-width: 14px 14px 0 14px;
+}
+.ccp-chat-bubble[data-tail="center"]::after {
+  left: 50%;
+  margin-left: -11px;
+  border-width: 11px 11px 0 11px;
+}
+
+.ccp-chat-bubble[data-tail="left"]::before {
+  left: 18%;
+  margin-left: -6px;
+  border-width: 16px 26px 0 6px;
+}
+.ccp-chat-bubble[data-tail="left"]::after {
+  left: 18%;
+  margin-left: -5px;
+  border-width: 13px 21px 0 5px;
+}
+
+.ccp-chat-bubble[data-tail="right"]::before {
+  left: 82%;
+  margin-left: -20px;
+  border-width: 16px 6px 0 26px;
+}
+.ccp-chat-bubble[data-tail="right"]::after {
+  left: 82%;
+  margin-left: -16px;
+  border-width: 13px 5px 0 21px;
+}
+
+/* Static in-dialog variant used by the GM Rules form's own preview — same
+   look, but positioned inline inside its preview box instead of fixed to
+   the viewport, and always shown with a centered tail (see the hint text
+   next to it in gm-settings.hbs). */
+.ccp-bubble-preview-box {
+  position: relative;
+  margin: 0.25rem 0 0.5rem;
+  padding: 0.5rem 0;
+}
+
+.ccp-chat-bubble.ccp-chat-bubble-static {
+  position: relative;
+  top: auto;
+  left: auto;
+  transform: none;
+  width: 100%;
+  margin: 0 auto;
+}

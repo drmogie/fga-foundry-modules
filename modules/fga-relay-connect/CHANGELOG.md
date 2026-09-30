@@ -1,0 +1,10 @@
+# Changelog
+
+## 2026.09.29.15
+- Moved into the fga-foundry-modules repository. Install links changed.
+- No code changes.
+
+## 2026.09.29.14
+- First release in its own GitHub repository.
+- Added manifest and download links, LICENSE, and this changelog.
+- Earlier builds (up to 2026.09.29.13) were installed by hand. See README for the full history.

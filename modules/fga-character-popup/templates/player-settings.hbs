@@ -1,0 +1,57 @@
+<div class="ccp-settings-body">
+  <p class="hint">Size, position, flip, and fade timing are all set by the GM now (see "Configure Character Appearance") — the one thing that's always your own choice is which image shows.</p>
+
+  {{#if hasCharacter}}
+  <div class="form-group">
+    <label>Preview (only visible to you) <span class="ccp-always-yours">— shown at your character's current GM-set size/position/flip</span></label>
+    <div class="ccp-preview-box">
+      <div class="ccp-preview-thumb" id="ccp-preview-thumb">
+        <img id="ccp-preview-img" src="{{previewImg}}" alt="Preview">
+      </div>
+    </div>
+  </div>
+  {{else}}
+  <p class="hint">You don't have a character assigned, so there's nothing to preview here.</p>
+  {{/if}}
+
+  <div class="form-group">
+    <label>Image Source <span class="ccp-always-yours">{{imageSourceNote}}</span></label>
+    <select name="imageSource">
+      {{#each imageSources}}
+      <option value="{{key}}" {{#if selected}}selected{{/if}}>{{label}}</option>
+      {{/each}}
+    </select>
+  </div>
+
+  <hr>
+
+  {{#if hasCharacter}}
+  <div class="form-group">
+    <label>Chat Bubble Color <span class="ccp-always-yours">Your own choice for your character — everyone sees this same color when {{previewName}} talks, so people can tell who's speaking at a glance.</span></label>
+    <input type="color" name="chatBubbleColor" value="{{chatBubbleColor.color}}">
+  </div>
+
+  <div class="form-group">
+    <label><input type="checkbox" name="autoBubbleTextColor" {{#if autoTextColor}}checked{{/if}}> Text color: auto (exact inverse of the bubble color)</label>
+    <label>Custom text color <span class="ccp-always-yours">Uncheck "Auto" above to pick your own — handy since the auto-inverse can land on an odd or muddy color for some backgrounds.</span></label>
+    <input type="color" name="chatBubbleTextColor" value="{{chatBubbleColor.fg}}">
+  </div>
+
+  <div class="form-group">
+    <label>Bubble preview (only visible to you)</label>
+    <div class="ccp-bubble-preview-box">
+      <div class="ccp-chat-bubble ccp-chat-bubble-static" id="ccp-player-bubble-preview" data-tail="center" style="--ccp-bubble-bg: {{chatBubbleColor.color}}; --ccp-bubble-fg: {{chatBubbleColor.fg}}; --ccp-bubble-border: {{chatBubbleColor.border}};">
+        <span class="ccp-bubble-name">{{previewName}}:</span>
+        <span class="ccp-bubble-text">This is what your character's chat bubble looks like.</span>
+      </div>
+    </div>
+    <p class="hint">Only shows at all if the GM has the chat bubble turned on in Configure Popup Rules.</p>
+  </div>
+  {{else}}
+  <p class="hint">You don't have a character assigned, so there's no bubble color to set — it's stored on your character, and there isn't one yet. Ask your GM to assign you one.</p>
+  {{/if}}
+
+  <footer class="form-footer">
+    <button type="submit"><i class="fa-solid fa-save"></i> Save</button>
+  </footer>
+</div>
