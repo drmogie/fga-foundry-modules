@@ -17,6 +17,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Check version format
+        run: |
+          bad=0
+          for f in modules/*/module.json; do
+            v=$(jq -r .version "$f")
+            if ! echo "$v" | grep -Eq '^[0-9]{4}\.[0-9]{2}\.[0-9]{2}\.[0-9]{2}$'; then
+              echo "::error file=$f::Version $v must look like 2026.09.30.01"
+              bad=1
+            fi
+          done
+          exit $bad
+
       - name: Release each module whose version is new
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

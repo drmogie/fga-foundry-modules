@@ -39,7 +39,7 @@ https://raw.githubusercontent.com/drmogie/fga-foundry-modules/main/modules/fga-a
 
 ### FGA Battle Director
 
-Version 2026.09.30.1
+Version 2026.09.30.02
 
 ```
 https://raw.githubusercontent.com/drmogie/fga-foundry-modules/main/modules/fga-battle-director/module.json

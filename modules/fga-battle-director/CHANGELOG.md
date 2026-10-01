@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026.09.30.02
+- Version number fixed to the two-digit format. No code changes.
+
 ## 2026.09.30.1
 - All settings are now GM only. Players no longer see them in the settings window.
 
