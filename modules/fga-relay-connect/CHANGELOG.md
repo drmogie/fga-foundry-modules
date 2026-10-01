@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026.09.30.02
+- A player's browser never connects to the relay, even if the old setting was left on.
+
 ## 2026.09.30.1
 - All settings are now GM only. Players no longer see them in the settings window.
 

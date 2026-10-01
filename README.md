@@ -39,7 +39,7 @@ https://raw.githubusercontent.com/drmogie/fga-foundry-modules/main/modules/fga-a
 
 ### FGA Battle Director
 
-Version 2026.09.29.02
+Version 2026.09.30.1
 
 ```
 https://raw.githubusercontent.com/drmogie/fga-foundry-modules/main/modules/fga-battle-director/module.json
@@ -63,7 +63,7 @@ https://raw.githubusercontent.com/drmogie/fga-foundry-modules/main/modules/fga-m
 
 ### VTT MCP Rest Connector
 
-Version 2026.09.29.16
+Version 2026.09.30.02
 
 ```
 https://raw.githubusercontent.com/drmogie/fga-foundry-modules/main/modules/fga-relay-connect/module.json

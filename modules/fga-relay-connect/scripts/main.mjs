@@ -134,5 +134,6 @@ Hooks.once("ready", () => {
     onState
   });
   game.modules.get(ID).api.link = link;
-  if (game.settings.get(ID, "enabled")) link.start();
+  // GM only: never connect a player's browser, even if an old setting is on.
+  if (game.user?.isGM && game.settings.get(ID, "enabled")) link.start();
 });
