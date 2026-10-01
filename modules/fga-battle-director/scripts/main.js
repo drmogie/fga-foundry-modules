@@ -48,6 +48,7 @@ Hooks.once("init", () => {
     hint: "How long the screen takes to close to black, and again to open. The whole trip is about double this. 300 to 6000.",
     scope: "world",
     config: true,
+    restricted: true,
     type: Number,
     default: 1400
   });
@@ -57,6 +58,7 @@ Hooks.once("init", () => {
     hint: "Off hides it. Always keeps it on screen. Only during battle shows it once a battle is staged or live.",
     scope: "client",
     config: true,
+    restricted: true,
     type: String,
     choices: {
       [FLOATING_STATES.OFF]: "Off",
@@ -79,6 +81,7 @@ Hooks.once("init", () => {
     hint: "Rolls initiative for everyone who has none, then starts combat. Turn off to let players roll their own after Start.",
     scope: "world",
     config: true,
+    restricted: true,
     type: Boolean,
     default: true
   });
@@ -88,6 +91,7 @@ Hooks.once("init", () => {
     hint: "Used when a map file name has no size in it. Name a file like Forest Road_70px.webp to set its own grid. Minimum 50.",
     scope: "world",
     config: true,
+    restricted: true,
     type: Number,
     default: 100
   });
@@ -97,6 +101,7 @@ Hooks.once("init", () => {
     hint: "The GM can always move anything.",
     scope: "world",
     config: true,
+    restricted: true,
     type: Boolean,
     default: false
   });

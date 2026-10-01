@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026.09.30.1
+- All settings are now GM only. Players no longer see them in the settings window.
+
 ## 2026.09.29.02
 - Moved into the fga-foundry-modules repository. Install links changed.
 - No code changes.

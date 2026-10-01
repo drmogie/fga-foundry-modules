@@ -65,6 +65,7 @@ Hooks.once("init", () => {
     hint: "FGA_RELAY.Enabled.Hint",
     scope: "client",
     config: true,
+    restricted: true,
     type: Boolean,
     default: false,
     onChange: (on) => (on ? link?.start() : link?.stop())
@@ -74,6 +75,7 @@ Hooks.once("init", () => {
     hint: "FGA_RELAY.Url.Hint",
     scope: "client",
     config: true,
+    restricted: true,
     type: String,
     default: "",
     onChange: () => game.settings.get(ID, "enabled") && (link.stop(), link.start())
@@ -83,6 +85,7 @@ Hooks.once("init", () => {
     hint: "FGA_RELAY.Key.Hint",
     scope: "client",
     config: true,
+    restricted: true,
     type: String,
     default: "",
     onChange: () => game.settings.get(ID, "enabled") && (link.stop(), link.start())
@@ -92,6 +95,7 @@ Hooks.once("init", () => {
 
 /** Show live status lights at the top of our settings. */
 Hooks.on("renderSettingsConfig", (app, html) => {
+  if (!game.user.isGM) return;
   const root = html instanceof HTMLElement ? html : (app.element ?? html?.[0]);
   if (!root?.querySelector) return;
   const panel = installPanel(root, {

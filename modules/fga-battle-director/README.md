@@ -2,7 +2,7 @@
 
 A GM tool for Foundry VTT (v13, D&D 5e). Pick a premade battlefield scene, choose who goes, and send the party there in one click. No movement or initiative until you click **Start Battle**.
 
-Version: 2026.09.29.02
+Version: 2026.09.30.1
 
 ## What it does
 

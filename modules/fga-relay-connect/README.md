@@ -1,6 +1,6 @@
 # VTT MCP Rest Connector
 
-Version: 2026.09.29.16
+Version: 2026.09.30.1
 
 Foundry module that links one browser to your Foundry VTT MCP & Rest Relay (add-on in https://github.com/drmogie/ha-foundry-vtt-addon).
 

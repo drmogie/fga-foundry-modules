@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026.09.30.1
+- All settings are now GM only. Players no longer see them in the settings window.
+
 ## 2026.09.29.16
 - Synced with the module code from the foundry-mcp repository (module 2026.09.29.16): advantage and disadvantage for attacks, and the board tools.
 
