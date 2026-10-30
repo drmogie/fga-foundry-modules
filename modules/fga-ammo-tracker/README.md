@@ -26,15 +26,15 @@ Open **Game Settings > Configure Settings > FGA Ammo Tracker**.
 
 ## Requirements
 
-- Foundry VTT v14 (verified)
-- D&D 5e system v6.0.0 or newer
+- Foundry VTT v13 or newer (v14 verified)
+- D&D 5e system v5.3.3 or newer
 
 ## Install
 
 **Manifest URL (recommended):**
 
 ```
-https://raw.githubusercontent.com/drmogie/fga-foundry-modules/main/modules/fga-ammo-tracker/module.json
+https://raw.githubusercontent.com/drmogie/fga-ammo-tracker/main/module.json
 ```
 
 In Foundry: **Add-on Modules > Install Module**, paste the URL above,
@@ -57,4 +57,4 @@ DrMogie
 In Foundry, open Add-on Modules, then Install Module.
 Paste this Manifest URL and click Install:
 
-`https://raw.githubusercontent.com/drmogie/fga-foundry-modules/main/modules/fga-ammo-tracker/module.json`
+`https://github.com/drmogie/fga-ammo-tracker/releases/latest/download/module.json`

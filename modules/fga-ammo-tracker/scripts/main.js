@@ -1,6 +1,6 @@
 /**
  * FGA Ammo Tracker
- * Version 2026.09.29.03
+ * Version 2026.10.29.01
  *
  * 1. While combat is running, count every piece of ammo an actor uses.
  * 2. When combat ends, post a chat card for each actor who fired ammo.
