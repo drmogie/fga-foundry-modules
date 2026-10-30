@@ -21,17 +21,17 @@ test("address check: empty, garbage, wrong scheme, and good", () => {
   assert.equal(checkAddress("   ").level, "empty");
   assert.equal(checkAddress(undefined).level, "empty");
   assert.equal(checkAddress("not a url").key, "FGA_RELAY.Check.AddressBad");
-  assert.equal(checkAddress("https://rest-relay.mogie.io").key, "FGA_RELAY.Check.AddressHttp");
-  assert.equal(checkAddress("http://172.16.90.75:3011").key, "FGA_RELAY.Check.AddressHttp");
+  assert.equal(checkAddress("https://relay.example.com").key, "FGA_RELAY.Check.AddressHttp");
+  assert.equal(checkAddress("http://192.168.1.75:3011").key, "FGA_RELAY.Check.AddressHttp");
   assert.equal(checkAddress("ftp://x.example").key, "FGA_RELAY.Check.AddressBad");
-  assert.deepEqual(checkAddress("wss://rest-relay.mogie.io"), { level: "ok", key: "FGA_RELAY.Check.AddressOk" });
-  assert.equal(checkAddress("  ws://172.16.90.75:3011  ").level, "ok");
+  assert.deepEqual(checkAddress("wss://relay.example.com"), { level: "ok", key: "FGA_RELAY.Check.AddressOk" });
+  assert.equal(checkAddress("  ws://192.168.1.75:3011  ").level, "ok");
 });
 
 test("address check: an https Foundry page needs wss", () => {
-  assert.equal(checkAddress("ws://172.16.90.75:3011", { securePage: true }).key, "FGA_RELAY.Check.AddressNeedsWss");
-  assert.equal(checkAddress("wss://rest-relay.mogie.io", { securePage: true }).level, "ok");
-  assert.equal(checkAddress("ws://172.16.90.75:3011", { securePage: false }).level, "ok");
+  assert.equal(checkAddress("ws://192.168.1.75:3011", { securePage: true }).key, "FGA_RELAY.Check.AddressNeedsWss");
+  assert.equal(checkAddress("wss://relay.example.com", { securePage: true }).level, "ok");
+  assert.equal(checkAddress("ws://192.168.1.75:3011", { securePage: false }).level, "ok");
 });
 
 test("key check: empty, spaces, short, and good", () => {
